@@ -1,0 +1,73 @@
+import 'package:reis_imovel_app/models/Contract.dart';
+import 'package:reis_imovel_app/models/Immobile.dart';
+
+final contracts = [
+  Contract(
+    immobile: Immobile(
+      id: 'i1',
+      title: 'Apartamento T3 Kilamba KK',
+      location: 'Luanda, Kilamba',
+      price: 80000,
+      type: 'Locação',
+      images: ['assets/images/locacao/1.jpg'],
+      bathrooms: 2,
+      room: 3,
+      condominiumFree: 5000,
+      conservation: 'Usado',
+      suits: 1,
+      vacancyFree: 0,
+      ownerName: 'Julio Balestrin',
+      ownerPhoneNumber: 934556677,
+      isFavorite: true,
+      description:
+          'Espaçosa casa de três quartos para arrendamento em uma localização privilegiada em Luanda, no bairro de Kilamba. Esta casa moderna oferece conforto e conveniência, com três quartos, incluindo uma suíte, e um banheiro adicional. Com uma área generosa, esta propriedade proporciona o espaço perfeito para famílias ou indivíduos que buscam uma residência bem localizada e funcional na vibrante cidade de Luanda.',
+      paymentMethod: 'Semestral/Anual',
+    ),
+    startDate: DateTime(2023, 12),
+    endDate: DateTime(2024, 6),
+  ),
+  Contract(
+    immobile: Immobile(
+      id: 'i2',
+      title: 'Apartamento T3 Centralidade do Sequele',
+      location: 'Luanda, Cacuaco, Sequele',
+      price: 75000,
+      type: 'Locação',
+      images: ['assets/images/locacao/2.jpg'],
+      bathrooms: 2,
+      room: 3,
+      condominiumFree: 2000,
+      conservation: 'Usado',
+      suits: 1,
+      vacancyFree: 2,
+      ownerName: 'Mauro Paim',
+      ownerPhoneNumber: 940556677,
+      isFavorite: true,
+      paymentMethod: 'Semestral/Anual',
+    ),
+    startDate: DateTime(2023, 12),
+    endDate: DateTime(2024, 6),
+  ),
+  Contract(
+    immobile: Immobile(
+      id: 'i3',
+      title: 'Apartamento na Mutamba',
+      location: 'Luanda, Mutamba',
+      price: 150000,
+      type: 'Locação',
+      images: ['assets/images/locacao/3.jpg'],
+      bathrooms: 3,
+      room: 3,
+      condominiumFree: 0,
+      conservation: 'Usado',
+      suits: 2,
+      vacancyFree: 2,
+      ownerName: 'Joaquim Nunes',
+      ownerPhoneNumber: 930125676,
+      isFavorite: false,
+      paymentMethod: 'Semestral/Anual',
+    ),
+    startDate: DateTime(2023, 12),
+    endDate: DateTime(2024, 6),
+  )
+];
