@@ -7,7 +7,7 @@ import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/dto/PropertyTypeEntity.dart';
 import 'package:reis_imovel_app/firebase_options.dart';
 // import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/models/ContractList.dart';
 import 'package:reis_imovel_app/models/OrderList.dart';
 import 'package:reis_imovel_app/models/PropertyList.dart';
@@ -136,7 +136,6 @@ class MyApp extends StatelessWidget {
         routes: {
           AppRoutes.Home: (ctx) => const AuthOrHomeScreen(),
           AppRoutes.SIGN_IN: (ctx) => const SignInScreen(),
-          AppRoutes.SIGN_UP: (ctx) => const SignUpScreen(),
           AppRoutes.SIGN_UP_CLIENT: (ctx) => const SignUpClientScreen(),
           AppRoutes.SIGN_UP_COMPANY: (ctx) => const SignUpCompany(),
           AppRoutes.RESET_PASSWORD: (ctx) => const ResetPasswordScreen(),

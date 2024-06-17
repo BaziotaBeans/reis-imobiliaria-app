@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/user_update_form.dart';
 import 'package:reis_imovel_app/enums.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 
 class ProfileScreen extends StatelessWidget {

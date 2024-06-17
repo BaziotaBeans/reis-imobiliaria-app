@@ -8,7 +8,7 @@ import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/header.dart';
 import 'package:reis_imovel_app/data/marital_status_data.dart';
 import 'package:reis_imovel_app/data/nationality_data.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 
 class UserUpdateForm extends StatefulWidget {
   const UserUpdateForm({super.key});

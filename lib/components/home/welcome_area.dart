@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 
 class WelcomeArea extends StatelessWidget {
   const WelcomeArea({super.key});

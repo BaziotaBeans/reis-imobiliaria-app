@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 // import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:reis_imovel_app/data/store.dart';
 import 'package:reis_imovel_app/models/Client.dart';
 import 'package:reis_imovel_app/models/Company.dart';
 import 'package:reis_imovel_app/models/user_signup.dart';
@@ -18,13 +21,16 @@ class Auth with ChangeNotifier {
   String? _nif;
   String? _nationality;
   String? _maritalStatus;
+  DateTime? _expiryDate;
+  Timer? _logoutTimer;
 
   List<dynamic> _roles = [];
   final dio = Dio();
   // DateTime? _expiryDate;
 
   bool get isAuth {
-    return _token != null;
+    final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
+    return _token != null && isValid;
   }
 
   String? get token {
@@ -75,19 +81,18 @@ class Auth with ChangeNotifier {
     const url = '${AppConstants.baseUrl}auth/signin';
 
     try {
-      final response = await dio.post(
-        url,
-        data: {
-          'username': userName,
-          'password': password,
-        },
-      );
+      final response = await dio.post(url, data: {
+        'username': userName,
+        'password': password,
+      });
 
       final body = response.data;
 
+      print('toke: $isAuth');
+
       if (body['error'] != null) {
         throw Exception(
-            'Ocorreu um erro no processo de autenticação.: ${body}');
+            'Ocorreu um erro no processo de autenticação: ${body['error']}');
       } else {
         _token = body['accessToken'];
         _email = body['email'];
@@ -100,13 +105,28 @@ class Auth with ChangeNotifier {
         _nif = body['nif'];
         _nationality = body['nationality'];
         _maritalStatus = body['maritalStatus'];
+        _expiryDate = DateTime.parse(body['expirationDate']);
 
+        Store.saveMap('userData', {
+          'token': _token,
+          'email': _email,
+          'userId': _userId,
+          'username': _userName,
+          'fullName': _fullName,
+          'address': _address,
+          'nif': _nif,
+          'nationality': _nationality,
+          'maritalStatus': _maritalStatus,
+          'expiryDate': _expiryDate
+        });
+
+        _autoLogout();
         notifyListeners();
+        // print(isAuth);
       }
     } catch (e) {
       print(e.toString());
-      throw Exception('Ocorreu um erro no processo de autenticação.')
-          .toString();
+      throw Exception('Ocorreu um erro no processo de autenticação.');
     }
   }
 
@@ -139,40 +159,44 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> signupWithCompany(
-    UserSignup user,
-    Company company,
-  ) async {
+  Future<void> signupWithCompany(UserSignup user, Company company) async {
     const url = '${AppConstants.baseUrl}auth/signup';
 
-    final response = await dio.post(url, data: user.toJson());
+    try {
+      final response = await dio.post(url, data: user.toJson());
 
-    final body = response.data;
+      final body = response.data;
 
-    if (body['error'] != null) {
-      throw Exception('Ocorreu um erro no processo de autenticação.: ${body}');
-    } else {
-      await createCompany(body["pkUser"], company);
-
+      if (body['error'] != null) {
+        throw Exception('Erro no processo de autenticação: ${body['error']}');
+      } else {
+        await createCompany(body["pkUser"], company);
+      }
+    } catch (e) {
+      // Aqui você pode logar o erro ou fazer algum tratamento adicional
+      throw Exception('Falha no processo de cadastro: $e');
+    } finally {
       notifyListeners();
     }
   }
 
-  Future<void> signupWithClient(
-    UserSignup user,
-    Client client,
-  ) async {
+  Future<void> signupWithClient(UserSignup user, Client client) async {
     const url = '${AppConstants.baseUrl}auth/signup';
 
-    final response = await dio.post(url, data: user.toJson());
+    try {
+      final response = await dio.post(url, data: user.toJson());
 
-    final body = response.data;
+      final body = response.data;
 
-    if (body['error'] != null) {
-      throw Exception('Ocorreu um erro no processo de autenticação.: ${body}');
-    } else {
-      await createClient(body["pkUser"], client);
-
+      if (body['error'] != null) {
+        throw Exception('Erro no processo de autenticação: ${body['error']}');
+      } else {
+        await createClient(body["pkUser"], client);
+      }
+    } catch (e) {
+      // Aqui você pode logar o erro ou fazer algum tratamento adicional
+      throw Exception('Falha no processo de cadastro: $e');
+    } finally {
       notifyListeners();
     }
   }
@@ -225,12 +249,55 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> tryAutoLogin() async {
+    if (isAuth) return;
+
+    final userData = await Store.getMap('userData');
+
+    if (userData.isEmpty) return;
+
+    final expiryDate = userData['expiryDate'] as DateTime;
+    if (expiryDate.isBefore(DateTime.now())) return;
+
+    _token = userData['token'];
+    _email = userData['email'];
+    _userId = userData['userId'];
+    _userName = userData['username'];
+    _fullName = userData['fullName'];
+    _address = userData['address'];
+    _nif = userData['nif'];
+    _nationality = userData['nationality'];
+    _maritalStatus = userData['maritalStatus'];
+    _expiryDate = expiryDate;
+
+    _autoLogout();
+    notifyListeners();
+  }
+
+  void _clearLogoutTimer() {
+    _logoutTimer?.cancel();
+    _logoutTimer = null;
+  }
+
   void logout() {
     _token = null;
     _email = null;
     _userId = null;
     _userName = null;
     _roles = [];
-    notifyListeners();
+    _clearLogoutTimer();
+    Store.remove('userData').then((_) {
+      notifyListeners();
+    });
+  }
+
+  void _autoLogout() {
+    _clearLogoutTimer();
+    final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
+    print(timeToLogout);
+    _logoutTimer = Timer(
+      Duration(seconds: timeToLogout ?? 0),
+      logout,
+    );
   }
 }

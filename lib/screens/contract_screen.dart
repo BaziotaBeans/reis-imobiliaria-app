@@ -7,7 +7,7 @@ import 'package:reis_imovel_app/components/header.dart';
 import 'package:reis_imovel_app/dto/Contract.dart';
 import 'package:reis_imovel_app/helper/pdf_contract_helper.dart';
 import 'package:reis_imovel_app/helper/pdf_helper.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';

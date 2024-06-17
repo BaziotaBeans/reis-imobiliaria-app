@@ -13,7 +13,7 @@ import 'package:reis_imovel_app/data/payment_modality_data.dart';
 import 'package:reis_imovel_app/data/property_status_data.dart';
 import 'package:reis_imovel_app/data/province_data.dart';
 import 'package:reis_imovel_app/enums.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/models/PropertyList.dart';
 import 'package:reis_imovel_app/models/Schedule.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
@@ -251,7 +251,8 @@ class _FormCreateImmboleForRentState extends State<FormCreateImmboleForRent> {
               controller: _selectedStatusController,
               hintText: 'Selecionar o estado do imóvel',
               labelText: 'Estado do imóvel',
-              helperText: "Selecione o estado atual do imóvel: Publicado, Em espera ou Arrendado.",
+              helperText:
+                  "Selecione o estado atual do imóvel: Publicado, Em espera ou Arrendado.",
               list: propertyStatusData,
               widthValueOfPadding: 41,
               enableFilter: false,
@@ -413,9 +414,12 @@ class _FormCreateImmboleForRentState extends State<FormCreateImmboleForRent> {
               ),
             AppTextFormField(
               hintText: 'Digite o preço',
-              labelText: AppConstants.propertyTypeRent == anncounementType ? 'Preço de aluguel' : 'Preço da compra',
-              helperText:
-                 AppConstants.propertyTypeRent == anncounementType ? 'O preço do aluguel será multiplicado em função da modalidade de pagamento.' : 'Por favor, insira o preço de compra do imóvel dentro da faixa correspondente.',
+              labelText: AppConstants.propertyTypeRent == anncounementType
+                  ? 'Preço de aluguel'
+                  : 'Preço da compra',
+              helperText: AppConstants.propertyTypeRent == anncounementType
+                  ? 'O preço do aluguel será multiplicado em função da modalidade de pagamento.'
+                  : 'Por favor, insira o preço de compra do imóvel dentro da faixa correspondente.',
               textInputAction: TextInputAction.next,
               keyboardType: TextInputType.number,
               onSaved: (value) =>
@@ -491,9 +495,9 @@ class _FormCreateImmboleForRentState extends State<FormCreateImmboleForRent> {
                     Padding(
                       padding: EdgeInsets.all(24),
                       child: AppText(
-                        AppConstants.propertyTypeRent == anncounementType 
-                        ? 'Complete o formulário abaixo para registrar o imóvel que deseja colocar no aluguel.' : 
-                        'Complete o formulário abaixo para registrar o imóvel que deseja vender.',
+                        AppConstants.propertyTypeRent == anncounementType
+                            ? 'Complete o formulário abaixo para registrar o imóvel que deseja colocar no aluguel.'
+                            : 'Complete o formulário abaixo para registrar o imóvel que deseja vender.',
                         color: const Color(0xFF74778B),
                         fontSize: 14,
                         fontWeight: FontWeight.w400,

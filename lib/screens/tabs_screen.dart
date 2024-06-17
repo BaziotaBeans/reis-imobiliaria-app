@@ -43,14 +43,6 @@ class _TabsScreenState extends State<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(_screens[_selectedScreenIndex]['title'] as String),
-      // ),
-      // appBar: AppBar(
-      //   toolbarHeight: 80,
-      //   elevation: 0,
-      //   flexibleSpace: AppBarGeneric(),
-      // ),
       body: SafeArea(child: _screens[_selectedScreenIndex]['screen'] as Widget),
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: _selectedScreenIndex,
@@ -83,41 +75,6 @@ class _TabsScreenState extends State<TabsScreen> {
           ),
         ],
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   onTap: _selectScreen,
-      //   backgroundColor: Theme.of(context).colorScheme.secondary,
-      //   unselectedItemColor: Theme.of(context).colorScheme.primary,
-      //   selectedItemColor: const Color(0xFF2486F9),
-      //   currentIndex: _selectedScreenIndex,
-      //   type: BottomNavigationBarType.shifting,
-      //   items: [
-      //     BottomNavigationBarItem(
-      //       backgroundColor: Theme.of(context).colorScheme.secondary,
-      //       icon: Icon(Icons.home),
-      //       label: 'Home'
-      //     ),
-      //     BottomNavigationBarItem(
-      //       backgroundColor: Theme.of(context).colorScheme.secondary,
-      //       icon: Icon(Icons.search),
-      //       label: 'Explorar'
-      //     ),
-      //     BottomNavigationBarItem(
-      //       backgroundColor: Theme.of(context).colorScheme.secondary,
-      //       icon: Icon(Icons.list),
-      //       label: 'Reservas'
-      //     ),
-      //     BottomNavigationBarItem(
-      //       backgroundColor: Theme.of(context).colorScheme.secondary,
-      //       icon: Icon(Icons.favorite),
-      //       label: 'Favoritos'
-      //     ),
-      //     BottomNavigationBarItem(
-      //       backgroundColor: Theme.of(context).colorScheme.secondary,
-      //       icon: Icon(Icons.account_circle_outlined),
-      //       label: 'Perfil'
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

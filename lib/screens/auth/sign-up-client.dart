@@ -10,7 +10,7 @@ import 'package:reis_imovel_app/components/auth/sign-up-header.dart';
 import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/data/marital_status_data.dart';
 import 'package:reis_imovel_app/data/nationality_data.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/models/Client.dart';
 import 'package:reis_imovel_app/models/user_signup.dart';
 import 'package:reis_imovel_app/utils/app_colors.dart';
@@ -133,7 +133,7 @@ class _SignUpClientScreenState extends State<SignUpClientScreen> {
     try {
       await auth.signupWithClient(user, client);
 
-      Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+      Navigator.of(context).restorablePopAndPushNamed(AppRoutes.SIGN_IN);
 
       Fluttertoast.showToast(
         msg: "Conta criada com sucesso",

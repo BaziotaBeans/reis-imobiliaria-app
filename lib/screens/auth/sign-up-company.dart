@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text_form_field.dart';
 import 'package:reis_imovel_app/components/auth/sign-up-header.dart';
 import 'package:reis_imovel_app/components/button.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/models/Company.dart';
 import 'package:reis_imovel_app/models/user_signup.dart';
 import 'package:reis_imovel_app/utils/app_colors.dart';

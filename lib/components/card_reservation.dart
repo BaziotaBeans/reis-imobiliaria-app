@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/dto/Scheduling.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/models/SchedulingList.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/app_text_form_field.dart';
 import 'package:reis_imovel_app/components/button.dart';
-import 'package:reis_imovel_app/models/Auh.dart';
+import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 
@@ -79,7 +79,10 @@ class _SignInScreenState extends State<SignInScreen> {
         _authData['userName']!,
         _authData['password']!,
       );
+
+      print('entrei');
     } on Exception catch (error) {
+      print('ERRO');
       print(error);
       _showErrorDialog(error.toString());
     } catch (error) {
