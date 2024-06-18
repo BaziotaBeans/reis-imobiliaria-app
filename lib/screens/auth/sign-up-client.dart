@@ -8,6 +8,7 @@ import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/app_text_form_field.dart';
 import 'package:reis_imovel_app/components/auth/sign-up-header.dart';
 import 'package:reis_imovel_app/components/button.dart';
+import 'package:reis_imovel_app/components/show-custom-toast.dart';
 import 'package:reis_imovel_app/data/marital_status_data.dart';
 import 'package:reis_imovel_app/data/nationality_data.dart';
 import 'package:reis_imovel_app/models/Auth.dart';
@@ -135,15 +136,7 @@ class _SignUpClientScreenState extends State<SignUpClientScreen> {
 
       Navigator.of(context).restorablePopAndPushNamed(AppRoutes.SIGN_IN);
 
-      Fluttertoast.showToast(
-        msg: "Conta criada com sucesso",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green[700],
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      showCustomToast("Conta criada com sucesso.");
     } on Exception catch (error) {
       _showErrorDialog(error.toString());
     } catch (error) {

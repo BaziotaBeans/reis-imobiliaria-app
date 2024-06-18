@@ -6,9 +6,12 @@ import 'package:reis_imovel_app/components/app_dropdown_form_field.dart';
 import 'package:reis_imovel_app/components/app_text_form_field.dart';
 import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/header.dart';
+import 'package:reis_imovel_app/components/show-custom-toast.dart';
 import 'package:reis_imovel_app/data/marital_status_data.dart';
 import 'package:reis_imovel_app/data/nationality_data.dart';
+import 'package:reis_imovel_app/dto/UserUpdate.dart';
 import 'package:reis_imovel_app/models/Auth.dart';
+import 'package:reis_imovel_app/utils/app_validators.dart';
 
 class UserUpdateForm extends StatefulWidget {
   const UserUpdateForm({super.key});
@@ -28,7 +31,7 @@ class _MyWidgetState extends State<UserUpdateForm> {
 
   final TextEditingController _phoneController = TextEditingController();
 
-  final TextEditingController _addresController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
 
   final TextEditingController _nationalityController = TextEditingController();
 
@@ -53,8 +56,56 @@ class _MyWidgetState extends State<UserUpdateForm> {
 
   bool _isLoading = false;
 
+  bool isEnable = false;
+
   final _formKey = GlobalKey<FormState>();
-  final _formData = <String, Object>{};
+
+  final _formData = <String, String>{};
+
+  // _usernameController.text = auth.userName ?? "";
+  //   _emailController.text = auth.email ?? "";
+  //   _fullNameController.text = auth.fullName ?? "";
+  //   _nifController.text = auth.nif ?? "";
+  //   _phoneController.text = auth.phone ?? "";
+  //   _addressController.text = auth.address ?? "";
+  //   _nationalityController.text = auth.nationality ?? "";
+  //   _maritalStatusController.text = auth.maritalStatus ?? "";
+
+  void validateSubmitButton() {
+    bool isValid = true;
+
+    isValid = _usernameController.text.isNotEmpty &&
+        _usernameController.text.length >= 5 &&
+        _fullNameController.text.isNotEmpty &&
+        _fullNameController.text.length >= 5 &&
+        _nifController.text.isNotEmpty &&
+        _nifController.text.length == 14 &&
+        _emailController.text.isNotEmpty &&
+        _addressController.text.isNotEmpty &&
+        _nationalityController.text.isNotEmpty &&
+        _maritalStatusController.text.isNotEmpty;
+    // && AppValidators.validatePhoneNumber(_phoneController.text.toString());
+
+    setState(() {
+      isEnable = isValid;
+    });
+  }
+
+  void _showErrorDialog(String msg) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Ocorreu um Erro'),
+        content: Text(msg),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Fechar'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   void didChangeDependencies() {
@@ -67,14 +118,60 @@ class _MyWidgetState extends State<UserUpdateForm> {
     _fullNameController.text = auth.fullName ?? "";
     _nifController.text = auth.nif ?? "";
     _phoneController.text = auth.phone ?? "";
-    _addresController.text = auth.address ?? "";
+    _addressController.text = auth.address ?? "";
     _nationalityController.text = auth.nationality ?? "";
     _maritalStatusController.text = auth.maritalStatus ?? "";
+
+    _formData['username'] = auth.userName ?? "";
+    _formData['fullName'] = auth.fullName ?? "";
+    _formData['email'] = auth.email ?? "";
+    _formData['phone'] = auth.phone ?? "";
+    _formData['nif'] = auth.nif ?? "";
+    _formData['address'] = auth.address ?? "";
+    _formData['nationality'] = auth.nationality ?? "";
+    _formData['maritalStatus'] = auth.maritalStatus ?? "";
+  }
+
+  Future<void> _submit() async {
+    final isValid = _formKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    _formKey.currentState?.save();
+
+    Auth auth = Provider.of(context, listen: false);
+
+    final user = UserUpdate(
+      username: _formData['username']!,
+      fullName: _formData['fullName']!,
+      email: _formData['email']!,
+      phone: _formData['phone']!,
+      nif: _formData['nif']!,
+      address: _formData['address']!,
+      nationality: _formData['nationality']!,
+      maritalStatus: _formData['maritalStatus']!,
+    );
+
+    print(user);
+
+    try {
+      await auth.updateUser(user);
+
+      showCustomToast("Informação alterada com sucesso.");
+    } on Exception catch (error) {
+      _showErrorDialog(error.toString());
+    } catch (error) {
+      _showErrorDialog('Por favor verifique se os seus dados são válidos.');
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   Widget _form(Auth auth) {
-    print(auth.fullName);
-
     return Form(
       key: _formKey,
       child: Padding(
@@ -94,8 +191,8 @@ class _MyWidgetState extends State<UserUpdateForm> {
               onSaved: (userName) => _formData['username'] = userName ?? '',
               onChanged: (value) {
                 _formKey.currentState?.validate();
-                // validateSubmitButton();
-                // _usernameController.text = value;
+                validateSubmitButton();
+                _usernameController.text = value;
                 _formData['username'] = value;
               },
               controller: _usernameController,
@@ -115,7 +212,7 @@ class _MyWidgetState extends State<UserUpdateForm> {
               onSaved: (value) => _formData['fullName'] = value ?? '',
               onChanged: (value) {
                 _formKey.currentState?.validate();
-                // validateSubmitButton();
+                validateSubmitButton();
                 _formData['fullName'] = value;
               },
               controller: _fullNameController,
@@ -135,7 +232,7 @@ class _MyWidgetState extends State<UserUpdateForm> {
               onSaved: (email) => _formData['email'] = email ?? '',
               onChanged: (value) {
                 _formKey.currentState?.validate();
-                // validateSubmitButton();
+                validateSubmitButton();
                 _formData['email'] = value;
               },
               validator: (_email) {
@@ -160,7 +257,7 @@ class _MyWidgetState extends State<UserUpdateForm> {
               onSaved: (phone) => _formData['phone'] = phone?.number ?? '',
               onChanged: (phone) {
                 _formKey.currentState?.validate();
-                // validateSubmitButton();
+                validateSubmitButton();
                 _formData['phone'] = phone.number;
               },
               controller: _phoneController,
@@ -180,7 +277,7 @@ class _MyWidgetState extends State<UserUpdateForm> {
               onSaved: (nif) => _formData['nif'] = nif ?? '',
               onChanged: (value) {
                 _formKey.currentState?.validate();
-                // validateSubmitButton();
+                validateSubmitButton();
                 _formData['nif'] = value;
               },
               controller: _nifController,
@@ -202,10 +299,10 @@ class _MyWidgetState extends State<UserUpdateForm> {
               onSaved: (address) => _formData['address'] = address ?? '',
               onChanged: (value) {
                 _formKey.currentState?.validate();
-                // validateSubmitButton();
+                validateSubmitButton();
                 _formData['address'] = value;
               },
-              controller: _addresController,
+              controller: _addressController,
               validator: (nif) {
                 final userNif = nif ?? '';
                 if (userNif.isEmpty) {
@@ -222,6 +319,12 @@ class _MyWidgetState extends State<UserUpdateForm> {
               widthValueOfPadding: 24,
               enableFilter: true,
               enableSearch: true,
+              onSelected: (value) {
+                if (value != null) {
+                  _formData["nationality"] = value;
+                  validateSubmitButton();
+                }
+              },
             ),
             AppDropdownFormField(
               controller: _maritalStatusController,
@@ -231,12 +334,22 @@ class _MyWidgetState extends State<UserUpdateForm> {
               widthValueOfPadding: 24,
               enableFilter: true,
               enableSearch: true,
+              onSelected: (value) {
+                if (value != null) {
+                  _formData["maritalStatus"] = value;
+                  validateSubmitButton();
+                }
+              },
             ),
-            Button(
-              title: "Actualizar os dados",
-              onPressed: () {},
-              variant: ButtonVariant.success,
-            )
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else
+              Button(
+                title: "Actualizar os dados",
+                // onPressed: isEnable ? _submit : null,
+                onPressed: _submit,
+                variant: ButtonVariant.primary,
+              )
           ],
         ),
       ),

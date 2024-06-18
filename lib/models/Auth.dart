@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 
 // import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:reis_imovel_app/components/user_update_form.dart';
 import 'package:reis_imovel_app/data/store.dart';
+import 'package:reis_imovel_app/dto/ChangePassword.dart';
+import 'package:reis_imovel_app/dto/UserUpdate.dart';
 import 'package:reis_imovel_app/models/Client.dart';
 import 'package:reis_imovel_app/models/Company.dart';
 import 'package:reis_imovel_app/models/user_signup.dart';
@@ -87,8 +90,6 @@ class Auth with ChangeNotifier {
       });
 
       final body = response.data;
-
-      print('toke: $isAuth');
 
       if (body['error'] != null) {
         throw Exception(
@@ -175,6 +176,80 @@ class Auth with ChangeNotifier {
     } catch (e) {
       // Aqui você pode logar o erro ou fazer algum tratamento adicional
       throw Exception('Falha no processo de cadastro: $e');
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateUser(UserUpdate userUpdate) async {
+    final url = '${AppConstants.baseUrl}user/$_userId';
+
+    try {
+      final response = await dio.put(
+        url,
+        data: userUpdate.toJson(),
+        options: Options(
+          headers: {"Authorization": "Bearer $_token"},
+          contentType: Headers.jsonContentType, //'application/json'
+          responseType: ResponseType.json,
+        ),
+      );
+
+      final body = response.data;
+
+      if (body['error'] != null) {
+        throw Exception('Erro no processo de actualização: ${body['error']}');
+      } else {
+        _email = body['email'];
+        _phone = body['phone'];
+        _userName = body['username'];
+        _fullName = body['fullName'];
+        _address = body['address'];
+        _nif = body['nif'];
+        _nationality = body['nationality'];
+        _maritalStatus = body['maritalStatus'];
+
+        Store.saveMap('userData', {
+          'token': _token,
+          'email': _email,
+          'userId': _userId,
+          'username': _userName,
+          'fullName': _fullName,
+          'address': _address,
+          'nif': _nif,
+          'nationality': _nationality,
+          'maritalStatus': _maritalStatus,
+          'expiryDate': _expiryDate
+        });
+      }
+    } catch (e) {
+      throw Exception('Erro no processo de actualização: $e');
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> changeUserPassword(ChangePassword changePassword) async {
+    final url = '${AppConstants.baseUrl}user/$_userId/change-password';
+
+    try {
+      final response = await dio.put(
+        url,
+        data: changePassword.toJson(),
+        options: Options(
+          headers: {"Authorization": "Bearer $_token"},
+          contentType: Headers.jsonContentType, //'application/json'
+          responseType: ResponseType.json,
+        ),
+      );
+
+      final body = response.data;
+
+      if (body['error'] != null) {
+        throw Exception('Erro no processo de actualização: ${body['error']}');
+      }
+    } catch (e) {
+      throw Exception('Erro no processo de actualização: $e');
     } finally {
       notifyListeners();
     }
@@ -294,7 +369,7 @@ class Auth with ChangeNotifier {
   void _autoLogout() {
     _clearLogoutTimer();
     final timeToLogout = _expiryDate?.difference(DateTime.now()).inSeconds;
-    print(timeToLogout);
+
     _logoutTimer = Timer(
       Duration(seconds: timeToLogout ?? 0),
       logout,
