@@ -8,8 +8,11 @@ class ContractList with ChangeNotifier {
   final String _userId;
   List<Contract> _contracts = [];
   List<Contract> _contractsByCompany = [];
+  Contract? _currentContract;
 
   final dio = Dio();
+
+  Contract? get currentContract => _currentContract;
 
   List<Contract> get contracts => [..._contracts];
 
@@ -20,6 +23,7 @@ class ContractList with ChangeNotifier {
     this._userId = '',
     this._contracts = const <Contract>[],
     this._contractsByCompany = const <Contract>[],
+    this._currentContract,
   ]);
 
   Future<void> loadContractsByCompany() async {
@@ -51,6 +55,27 @@ class ContractList with ChangeNotifier {
     }
   }
 
+  Future<void> loadContractsById(String pkContract) async {
+    final url = "${AppConstants.baseUrl}contracts/$pkContract";
+
+    try {
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {"Authorization": "Bearer $_token"},
+          contentType: Headers.jsonContentType, //'application/json'
+          responseType: ResponseType.json,
+        ),
+      );
+
+      if (response.data.toString().isNotEmpty) {
+        _currentContract = Contract.fromJSON(response.data);
+      }
+    } catch (e) {
+      debugPrint('ERRO NO CONTRACTO: $e');
+    }
+  }
+
   Future<void> loadContracts() async {
     _contracts.clear();
 
@@ -75,6 +100,58 @@ class ContractList with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       throw Exception('Ocorreu um erro ao pesquisar os dados: ' + e.toString())
+          .toString();
+    }
+  }
+
+  Future<void> updateOwnerSignature(
+      String signaturePropertyOwner, String pkContract) async {
+    final url =
+        "${AppConstants.baseUrl}contracts/$pkContract/update-owner-signature";
+
+    final formattedData = {'signaturePropertyOwner': signaturePropertyOwner};
+
+    try {
+      final response = await dio.patch(
+        url,
+        data: formattedData,
+        options: Options(
+          headers: {"Authorization": "Bearer $_token"},
+          contentType: Headers.jsonContentType, //'application/json'
+          responseType: ResponseType.json,
+        ),
+      );
+
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Ocorreu ao criar assinatura: ' + e.toString())
+          .toString();
+    }
+  }
+
+  Future<void> updateCustomerSignature(
+      String signaturePropertyCustomer, String pkContract) async {
+    final url =
+        "${AppConstants.baseUrl}contracts/$pkContract/update-customer-signature";
+
+    final formattedData = {
+      'signaturePropertyCustomer': signaturePropertyCustomer
+    };
+
+    try {
+      final response = await dio.patch(
+        url,
+        data: formattedData,
+        options: Options(
+          headers: {"Authorization": "Bearer $_token"},
+          contentType: Headers.jsonContentType, //'application/json'
+          responseType: ResponseType.json,
+        ),
+      );
+
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Ocorreu ao criar assinatura: ' + e.toString())
           .toString();
     }
   }

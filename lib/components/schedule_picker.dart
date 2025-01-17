@@ -6,6 +6,7 @@ import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/dto/PropertyScheduleResult.dart';
 import 'package:reis_imovel_app/models/PropertyScheduleList.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class SchedulePicker extends StatefulWidget {
   final String pkProperty;
@@ -84,7 +85,7 @@ class _SchedulePickerState extends State<SchedulePicker> {
                 'Agendar Visita',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF687553),
+                color: primaryColor,
               ),
               const SizedBox(height: 6),
               AppText(
@@ -115,7 +116,7 @@ class _SchedulePickerState extends State<SchedulePicker> {
                   leading: Radio<String>(
                     value: schedule.pkPropertySchedule,
                     groupValue: selectedScheduleId,
-                    activeColor: const Color(0xff687553),
+                    activeColor: primaryColor,
                     onChanged: (value) {
                       if (value != null) {
                         _selectSchedule(value);

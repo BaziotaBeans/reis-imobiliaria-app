@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:gallery_picker/gallery_picker.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class UploadImages extends StatefulWidget {
   final List<MediaFile> selectedFiles;
@@ -42,7 +43,7 @@ class _UploadImagesState extends State<UploadImages> {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
+              color: whiteColor,
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.shade100,
@@ -124,20 +125,20 @@ class _UploadImagesState extends State<UploadImages> {
         radius: const Radius.circular(12),
         dashPattern: const [10, 4],
         strokeCap: StrokeCap.round,
-        color: Colors.blue.shade400,
+        color: primaryColor,
         child: Container(
           width: double.infinity,
           height: 120,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.blue.shade50.withOpacity(.3),
+            color: primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
             children: [
               const Icon(
                 Iconsax.folder_open,
-                color: Colors.blue,
+                color: primaryColor,
                 size: 40,
               ),
               const SizedBox(height: 15),

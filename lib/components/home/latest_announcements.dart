@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/home/card_latest_announcement.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class LatestAnnouncements extends StatelessWidget {
   final List<PropertyResult> data;
@@ -20,12 +21,12 @@ class LatestAnnouncements extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const AppText(
+            const CustomText(
               'Últimos anúncios',
               textAlign: TextAlign.center,
-              color: Color(0xFF3D3F33),
+              color: secondaryColor,
               fontSize: 20,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w500,
               // height: 0.06,
             ),
             InkWell(
@@ -35,12 +36,12 @@ class LatestAnnouncements extends StatelessWidget {
                   arguments: data,
                 );
               },
-              child: const AppText(
+              child: const CustomText(
                 'Ver Todos',
                 textAlign: TextAlign.center,
-                color: Color(0xFFF88898F),
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+                color: secondaryText,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],

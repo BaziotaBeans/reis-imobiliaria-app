@@ -1,11 +1,11 @@
-import 'dart:ffi';
+// import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class CardImmobileHorizontal extends StatelessWidget {
   final PropertyResult data;
@@ -17,9 +17,9 @@ class CardImmobileHorizontal extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText(
+          CustomText(
             data.property.title,
-            color: const Color(0xFF252D4B),
+            color: secondaryColor,
             fontWeight: FontWeight.w500,
           ),
           const SizedBox(
@@ -28,20 +28,22 @@ class CardImmobileHorizontal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(
+              const Icon(
                 Icons.location_on_outlined,
-                color: AppColors.primaryColor,
+                color: primaryColor,
                 size: 18,
               ),
               const SizedBox(
                 width: 6,
               ),
-              AppText(
-                '${data.property.province} ${data.property.county}',
-                color: const Color(0xFF2C3A61),
-                fontSize: 14,
-                height: 0,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: CustomText(
+                  '${data.property.province} ${data.property.county}',
+                  color: secondaryText,
+                  fontSize: 14,
+                  height: 0,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
@@ -49,25 +51,26 @@ class CardImmobileHorizontal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
+              const Row(
                 children: [
-                  const AppText(
+                  CustomText(
                     'Ver anúncio',
-                    color: Color(0xFF1886F9),
+                    color: primaryColor,
                     fontSize: 15,
                   ),
-                  const SizedBox(width: 2),
+                  SizedBox(width: 2),
                   Icon(
                     Icons.arrow_forward_ios_rounded,
-                    color: AppColors.primaryColor,
+                    color: primaryColor,
                     size: 14,
                   )
                 ],
               ),
-              AppText(
+              CustomText(
                 AppUtils.formatDateDayAndMounth(
-                    data.property.createdAt.toString()),
-                color: const Color(0xFF6A7380),
+                  data.property.createdAt.toString(),
+                ),
+                color: secondaryText,
                 fontSize: 12,
               )
             ],
@@ -82,8 +85,10 @@ class CardImmobileHorizontal extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         //AppRoutes.AnnouncementPreviewDetail
-        Navigator.of(context)
-            .pushNamed(AppRoutes.AnnouncementPreviewDetail, arguments: data);
+        Navigator.of(context).pushNamed(
+          AppRoutes.AnnouncementPreviewDetail,
+          arguments: data,
+        );
       },
       child: Container(
         width: double.infinity,
@@ -94,27 +99,26 @@ class CardImmobileHorizontal extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                width: 85,
-                height: 69,
-                decoration: ShapeDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(data.images[0].url),
-                    fit: BoxFit.fill,
-                  ),
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              width: 85,
+              height: 69,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(data.images[0].url),
+                  fit: BoxFit.fill,
+                ),
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(7),
                 ),
               ),
-              const SizedBox(width: 14),
-              _boxDescription(context)
-            ],
-          ),
+            ),
+            const SizedBox(width: 14),
+            _boxDescription(context)
+          ],
         ),
       ),
     );

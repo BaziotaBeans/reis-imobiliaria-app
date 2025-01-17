@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
+import 'package:reis_imovel_app/components/new/custom_button.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/components/user_update_form.dart';
 import 'package:reis_imovel_app/enums.dart';
 import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -159,30 +162,54 @@ class ProfileScreen extends StatelessWidget {
       showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Fazer logout'),
-          content: const Text('Tem certeza?'),
+          backgroundColor: whiteColor,
+          title: const CustomText(
+            'Fazer logout',
+            fontWeight: FontWeight.w500,
+            textAlign: TextAlign.center,
+            fontSize: 16,
+            color: secondaryColor,
+          ),
+          content: const CustomText(
+            'Tem certeza que deseja sair?',
+            textAlign: TextAlign.center,
+            color: secondaryText,
+          ),
+          actionsAlignment: MainAxisAlignment.center,
           actions: [
             TextButton(
-              child: const Text('Não'),
+              child: const CustomText(
+                'Não',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: secondaryText,
+              ),
               onPressed: () => Navigator.of(ctx).pop(false),
             ),
             TextButton(
-              child: const Text('Sim'),
+              child: const CustomText(
+                'Sim',
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: primaryColor,
+              ),
               onPressed: () => Navigator.of(ctx).pop(true),
             ),
           ],
         ),
-      ).then((value) {
-        if (value ?? false) {
-          Provider.of<Auth>(
-            context,
-            listen: false,
-          ).logout();
-          Navigator.of(context).pushReplacementNamed(
-            AppRoutes.Home,
-          );
-        }
-      });
+      ).then(
+        (value) {
+          if (value ?? false) {
+            Provider.of<Auth>(
+              context,
+              listen: false,
+            ).logout();
+            Navigator.of(context).pushReplacementNamed(
+              AppRoutes.Home,
+            );
+          }
+        },
+      );
     }
   }
 

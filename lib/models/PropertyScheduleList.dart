@@ -14,7 +14,7 @@ class PropertyScheduleList with ChangeNotifier {
   List<PropertyScheduleResult> get propertiesSchedule =>
       [..._propertiesSchedules];
 
-  List<PropertyScheduleResult> get propertiesAvailableSchedules => 
+  List<PropertyScheduleResult> get propertiesAvailableSchedules =>
       [..._propertiesAvailableSchedules];
 
   final dio = Dio();
@@ -26,8 +26,10 @@ class PropertyScheduleList with ChangeNotifier {
     this._propertiesAvailableSchedules = const <PropertyScheduleResult>[],
   ]);
 
-  Future<void> createScheduling(String pkPropertySchedule, String pkProperty) async {
-    final url = '${AppConstants.baseUrl}scheduling/${pkPropertySchedule}/${pkProperty}';
+  Future<void> createScheduling(
+      String pkPropertySchedule, String pkProperty) async {
+    final url =
+        '${AppConstants.baseUrl}scheduling/${pkPropertySchedule}/${pkProperty}';
 
     try {
       final response = await dio.post(
@@ -61,11 +63,13 @@ class PropertyScheduleList with ChangeNotifier {
         ),
       );
 
-      List<dynamic> jsonData = response.data;
+      if (response.data.toString().isNotEmpty) {
+        List<dynamic> jsonData = response.data;
 
-      _propertiesSchedules = jsonData
-          .map((data) => PropertyScheduleResult.fromJson(data))
-          .toList();
+        _propertiesSchedules = jsonData
+            .map((data) => PropertyScheduleResult.fromJson(data))
+            .toList();
+      }
 
       notifyListeners();
     } catch (e) {
@@ -77,7 +81,8 @@ class PropertyScheduleList with ChangeNotifier {
   Future<void> findAvailableSchedulesByPropertyId(String pkProperty) async {
     _propertiesAvailableSchedules.clear();
 
-    final url = "${AppConstants.baseUrl}property/schedule/available/$pkProperty";
+    final url =
+        "${AppConstants.baseUrl}property/schedule/available/$pkProperty";
 
     try {
       final response = await dio.get(
@@ -92,7 +97,7 @@ class PropertyScheduleList with ChangeNotifier {
       if (response.data.toString().isEmpty) {
         _propertiesAvailableSchedules = <PropertyScheduleResult>[];
       } else {
-         List<dynamic> jsonData = response.data;
+        List<dynamic> jsonData = response.data;
 
         _propertiesAvailableSchedules = jsonData
             .map((data) => PropertyScheduleResult.fromJson(data))

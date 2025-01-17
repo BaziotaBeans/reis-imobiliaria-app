@@ -1,5 +1,4 @@
 class AppValidators {
-
   static bool validatePhoneNumber(String str) {
     if (str.length == 9) return true;
     return false;
@@ -25,14 +24,19 @@ class AppValidators {
 
   static int validateIntFormData(Object? value) {
     if (value != null) {
+      print('int');
       print(value);
       return int.parse(value.toString());
     }
     return 0;
   }
-  
+
   static double validateDoubleFormData(Object? value) {
-    if (value != null) return double.parse(value.toString());
+    if (value != null) {
+      print('double');
+      print('$value');
+      return double.parse(value.toString());
+    }
     return 0;
   }
 }

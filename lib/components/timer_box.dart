@@ -1,14 +1,15 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class TimerBox extends StatefulWidget {
   final DateTime expirationDate;
 
-  TimerBox({required this.expirationDate});
+  const TimerBox({required this.expirationDate, super.key});
 
   @override
-  _TimerBoxState createState() => _TimerBoxState();
+  State<TimerBox> createState() => _TimerBoxState();
 }
 
 class _TimerBoxState extends State<TimerBox> {
@@ -57,7 +58,7 @@ class _TimerBoxState extends State<TimerBox> {
       width: 110,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color.fromARGB(39, 104, 117, 83),
+        color: Color.fromARGB(20, 104, 117, 83),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -67,13 +68,13 @@ class _TimerBoxState extends State<TimerBox> {
             const FaIcon(
               FontAwesomeIcons.clock,
               size: 16,
-              color: Color(0xff687553),
+              color: primaryColor,
             ),
             const SizedBox(width: 5),
             Text(
               _formatDuration(_remainingTime),
               style: const TextStyle(
-                color: Color(0xff687553),
+                color: primaryColor,
                 fontWeight: FontWeight.w700,
               ),
             ),

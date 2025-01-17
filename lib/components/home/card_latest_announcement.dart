@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 
 class CardLatestAnnouncement extends StatelessWidget {
@@ -90,7 +90,7 @@ class CardLatestAnnouncement extends StatelessWidget {
               const SizedBox(height: 12),
               AppText(
                 formatPrice(data.property.price),
-                color: const Color(0xFF687553),
+                color: primaryColor,
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),

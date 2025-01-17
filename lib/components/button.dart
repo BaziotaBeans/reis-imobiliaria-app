@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 enum ButtonVariant {
   primary,
@@ -37,7 +37,7 @@ class Button extends StatelessWidget {
   Color getButtonColor(ButtonVariant type) {
     switch (type) {
       case ButtonVariant.primary:
-        return const Color(0xFFF687553);
+        return primaryColor;
       case ButtonVariant.secondary:
         return Colors.black;
       case ButtonVariant.tertiary:
@@ -105,7 +105,7 @@ class Button extends StatelessWidget {
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
           fontFamily: 'Avenir',
-          color: const Color(0xff687553),
+          color: primaryColor,
         );
       case ButtonVariant.success:
         return TextStyle(

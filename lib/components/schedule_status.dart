@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reis_imovel_app/components/app_dropdown_form_field.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/data/day_of_week_data.dart';
 import 'package:reis_imovel_app/enums.dart';
 import 'package:reis_imovel_app/models/Schedule.dart';
 import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class ScheduleStatus extends StatefulWidget {
   final List<Schedule> selectedSchedules;
@@ -64,7 +66,7 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
     if (_selectedStartTime != null && _selectedEndTime != null) {
       setState(() {
         _schedules.add(Schedule(
-          dayOfWeek: AppUtils.getWeekDay( _dayOfWeekController.text),
+          dayOfWeek: AppUtils.getWeekDay(_dayOfWeekController.text),
           startTime: AppUtils.formatTimeInPickedTime(_selectedStartTime!),
           endTime: AppUtils.formatTimeInPickedTime(_selectedEndTime!),
         ));
@@ -153,9 +155,9 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText(
+          const CustomText(
             'Dias de semanas selecionadas',
-            color: Colors.grey[600],
+            color: secondaryText,
             fontWeight: FontWeight.w400,
           ),
           const SizedBox(height: 10),
@@ -206,10 +208,10 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
             ),
             child: Row(
               children: [
-                FaIcon(
+                const FaIcon(
                   FontAwesomeIcons.clock,
                   size: 18,
-                  color: AppColors.primaryColor,
+                  color: primaryColor,
                 ),
                 const SizedBox(width: 10),
                 if (_selectedTime == null)
@@ -246,7 +248,7 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
           hintText: 'Selecione os dias da semana',
           labelText: 'Dias da semana',
           list: dayOfWeekData,
-          widthValueOfPadding: 41,
+          widthValueOfPadding: 0,
           onSelected: (value) {
             print(PropertyStatus.values);
             // setState(() => updateProvinceValueState = value ?? '');
@@ -269,8 +271,8 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
         TextButton(
           onPressed: _addSchedule,
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(AppColors.primaryColor),
-            foregroundColor: MaterialStateProperty.all(Colors.white),
+            backgroundColor: MaterialStateProperty.all(primaryColor),
+            foregroundColor: MaterialStateProperty.all(whiteColor),
           ),
           child: const Row(
             crossAxisAlignment: CrossAxisAlignment.center,

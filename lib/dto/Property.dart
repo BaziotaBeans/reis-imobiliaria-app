@@ -21,10 +21,14 @@ class Property {
   final String fkCompany;
   final PropertyTypeEntity fkPropertyTypeEntity;
   final String fkPropertyType;
-  final List<dynamic> propertyImages; // Tipicamente, seria uma lista de uma classe Image, se necessário
+  final List<dynamic>
+      propertyImages; // Tipicamente, seria uma lista de uma classe Image, se necessário
   final String propertyStatus;
-  final List<dynamic> schedules; // Tipicamente, seria uma lista de uma classe Schedule, se necessário
+  final List<dynamic>
+      schedules; // Tipicamente, seria uma lista de uma classe Schedule, se necessário
   final String createdAt;
+  final double? latitude;
+  final double? longitude;
 
   Property({
     required this.pkProperty,
@@ -50,6 +54,8 @@ class Property {
     required this.propertyStatus,
     required this.schedules,
     required this.createdAt,
+    required this.latitude,
+    required this.longitude,
   });
 
   factory Property.fromJson(Map<String, dynamic> json) {
@@ -71,12 +77,15 @@ class Property {
       status: json['status'],
       companyEntity: CompanyEntity.fromJson(json['companyEntity']),
       fkCompany: json['fkCompany'],
-      fkPropertyTypeEntity: PropertyTypeEntity.fromJson(json['fkPropertyTypeEntity']),
+      fkPropertyTypeEntity:
+          PropertyTypeEntity.fromJson(json['fkPropertyTypeEntity']),
       fkPropertyType: json['fkPropertyType'],
       propertyImages: json['propertyImages'],
       propertyStatus: json['propertyStatus'],
       schedules: json['schedules'],
       createdAt: json['createdAt'],
+      latitude: json['latitude'].toDouble() ?? 0.0,
+      longitude: json['longitude'].toDouble() ?? 0.0,
     );
   }
 }

@@ -6,6 +6,8 @@ import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/card_detail_image_slider.dart';
 import 'package:reis_imovel_app/components/go-back-button.dart';
 import 'package:reis_imovel_app/components/modality_payment_info.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
+import 'package:reis_imovel_app/components/new/expandable_text.dart';
 import 'package:reis_imovel_app/components/schedule_picker.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/enums.dart';
@@ -14,6 +16,7 @@ import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 import 'package:reis_imovel_app/utils/format_number_with_sufix.dart';
 
@@ -67,9 +70,9 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppText(
+        CustomText(
           title,
-          color: const Color(0xfff687553),
+          color: secondaryText,
           fontSize: 14,
           fontWeight: FontWeight.w400,
           letterSpacing: 0.30,
@@ -83,15 +86,15 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
           children: [
             Icon(
               getIconToBoxDetailItemExtra(type),
-              color: const Color(0xfff687553),
+              color: primaryColor,
               size: 18,
             ),
             const SizedBox(
               width: 4,
             ),
-            AppText(
+            CustomText(
               quantity.toString(),
-              color: const Color(0xFF3D3F33),
+              color: secondaryText,
               fontSize: 16,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.42,
@@ -115,18 +118,18 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText(
+          CustomText(
             title,
-            color: const Color(0xFF3D3F33),
+            color: secondaryColor,
             fontSize: 14,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w500,
           ),
           const SizedBox(
             height: 8,
           ),
-          AppText(
+          CustomText(
             value,
-            color: const Color(0xFF3D3F33),
+            color: secondaryColor,
             fontSize: 14,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.36,
@@ -151,10 +154,10 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
             child: const Row(
               children: [
                 FaIcon(FontAwesomeIcons.circleInfo,
-                    size: 20, color: Color(0xff687553)),
+                    size: 20, color: primaryColor),
                 SizedBox(width: 8),
-                AppText('Clique aqui para mais informções.',
-                    color: Color(0xff3D3F33))
+                CustomText('Clique aqui para mais informções.',
+                    color: secondaryText)
               ],
             ),
           )
@@ -167,9 +170,9 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppText(
+        CustomText(
           title,
-          color: const Color(0xFF687553),
+          color: secondaryColor,
           fontSize: 14,
           fontWeight: FontWeight.w400,
           letterSpacing: 0.30,
@@ -177,9 +180,9 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
         const SizedBox(
           height: 8,
         ),
-        AppText(
+        CustomText(
           value,
-          color: const Color(0xFF3D3F33),
+          color: secondaryText,
           fontSize: 14,
           fontWeight: FontWeight.w400,
           letterSpacing: 0.36,
@@ -250,21 +253,17 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppText(
-          "Descrição",
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-          color: Color(0xff2c3a61),
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        AppText(
-          description ?? 'Sem descrição',
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          color: const Color(0xff2c3a61),
-          height: 1.5,
+        ExpandableText(
+          title: "Descrição",
+          description: description ?? 'Sem descrição',
+          titleStyle: const TextStyle(
+            color: secondaryColor,
+            fontWeight: FontWeight.w500,
+          ),
+          descriptionStyle: const TextStyle(
+            color: secondaryText,
+            fontSize: 14,
+          ),
         ),
       ],
     );
@@ -287,7 +286,7 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AppText(
+              CustomText(
                 data.property.companyEntity.user.fullName,
                 color: const Color(0xFF3D3F33),
                 fontSize: 14,
@@ -297,7 +296,7 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
               const SizedBox(
                 height: 4,
               ),
-              const AppText(
+              const CustomText(
                 'Imobiliário',
                 color: Color(0xFF3D3F33),
                 fontSize: 12,
@@ -308,14 +307,14 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
             children: [
               Icon(
                 Icons.phone,
-                color: Color(0xff687553),
+                color: primaryColor,
               ),
               SizedBox(
                 width: 8,
               ),
               Icon(
                 Icons.message,
-                color: Color(0xff687553),
+                color: primaryColor,
               ),
             ],
           )
@@ -335,11 +334,11 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
             children: [
               SizedBox(
                 width: 180,
-                child: AppText(
+                child: CustomText(
                   data.property.title,
-                  color: const Color(0xFF3D3F33),
+                  color: secondaryColor,
                   fontSize: 24,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   softWrap: false,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -347,10 +346,10 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
               ),
               SizedBox(
                 width: 96,
-                child: AppText(
+                child: CustomText(
                   formatNumberWithSufix(data.property.price),
                   textAlign: TextAlign.right,
-                  color: const Color(0xFF687553),
+                  color: primaryColor,
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
                   softWrap: false,
@@ -373,22 +372,22 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
                 children: [
                   const Icon(
                     Icons.location_on_outlined,
-                    color: Color(0xFF3D3F33),
+                    color: primaryColor,
                     size: 20,
                   ),
                   const SizedBox(
                     width: 4,
                   ),
-                  AppText(
+                  CustomText(
                     "${data.property.province}, ${data.property.county}",
-                    color: const Color(0xFF3D3F33),
+                    color: secondaryText,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
                 ],
               ),
               if (data.property.fkPropertyType == AppConstants.propertyTypeRent)
-                const AppText(
+                const CustomText(
                   'por mês',
                   textAlign: TextAlign.right,
                   color: Color(0xFFA3A2A9),
@@ -401,10 +400,10 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
           const SizedBox(height: 20),
           const Divider(height: 1, color: Color(0xfffA3A2A9)),
           _boxDetail(context, data),
-          if (data.property.description.isNotEmpty) const SizedBox(height: 40),
           if (data.property.description.isNotEmpty)
             _descriptionBlock(data.property.description),
-          const Divider(height: 1, color: Color(0xfffA3A2A9)),
+          // if (data.property.description.isNotEmpty)
+          // const SizedBox(height: defaultPadding),
           const SizedBox(height: 20),
           if (data.property.fkPropertyType == AppConstants.propertyTypeRent)
             _paymentModality(
@@ -454,7 +453,7 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          AppText(
+          CustomText(
             data.property.fkPropertyType == AppConstants.propertyTypeRent
                 ? 'Preço do aluguel'
                 : 'Preço da compra',
@@ -472,7 +471,7 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
                 TextSpan(
                   text: formatPrice(data.property.price),
                   style: const TextStyle(
-                    color: Color(0xFF687553),
+                    color: primaryColor,
                     fontSize: 16,
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w700,
@@ -505,12 +504,12 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
           const SizedBox(height: 20),
           const Divider(color: Color.fromARGB(255, 160, 160, 160), height: 10),
           const SizedBox(height: 20),
-          const AppText(
+          const CustomText(
             'Solicitar visita domiciliar',
             textAlign: TextAlign.center,
-            color: Color(0xFF3D3F33),
+            color: secondaryColor,
             fontSize: 18,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
           ),
           const SizedBox(height: 20),
           Button(
@@ -537,6 +536,7 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
           child: Column(
             children: [
               _cardPrimary(context, data),
+              const SizedBox(height: defaultPadding),
               _displayDetail(context, data),
               Padding(
                 padding: const EdgeInsets.all(16),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/utils/app_colors.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class AppDropdownFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -50,7 +51,7 @@ class AppDropdownFormField extends StatelessWidget {
               children: [
                 AppText(
                   labelText ?? '',
-                  color: Colors.grey[600],
+                  color: secondaryText,
                   fontSize: 14,
                 ),
                 const SizedBox(height: 6),
@@ -61,13 +62,13 @@ class AppDropdownFormField extends StatelessWidget {
                     const FaIcon(
                       FontAwesomeIcons.solidCircleQuestion,
                       size: 16,
-                      color: Color(0xff3D3F33),
+                      color: secondaryColor,
                     ),
                     const SizedBox(width: 6),
                     Flexible(
                       child: AppText(
                         helperText ?? '',
-                        color: Colors.grey[600],
+                        color: secondaryText,
                         fontSize: 12,
                         maxLines: 4,
                         softWrap: true,
@@ -85,7 +86,6 @@ class AppDropdownFormField extends StatelessWidget {
             enableFilter: enableFilter ?? true,
             textStyle: const TextStyle(
               fontWeight: FontWeight.w400,
-              fontFamily: 'Avenir',
             ),
             // helperText: helperText,
             enabled: enabled,
@@ -107,10 +107,9 @@ class AppDropdownFormField extends StatelessWidget {
             hintText: hintText,
             inputDecorationTheme: InputDecorationTheme(
               hintStyle: const TextStyle(
-                color: Color(0x993C3C43),
+                color: secondaryColor,
                 fontWeight: FontWeight.w400,
                 fontSize: 16,
-                fontFamily: 'Avenir',
               ),
               floatingLabelBehavior: FloatingLabelBehavior.always,
               border: const OutlineInputBorder(
@@ -121,10 +120,10 @@ class AppDropdownFormField extends StatelessWidget {
               ),
               filled: true,
               fillColor: AppColors.inputFillColor,
-              focusColor: AppColors.inputFillColor,
+              focusColor: primaryColor,
               focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xFF3D3F33),
+                  color: primaryColor,
                   width: 2,
                 ),
               ),

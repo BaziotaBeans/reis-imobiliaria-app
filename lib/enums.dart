@@ -10,6 +10,10 @@ enum PaymentMethodEnum {
   transfer_payment,
 }
 
+enum PaymentMethod { REFERENCE, MULTICAIXA_EXPRESS }
+
+enum PaymentMethodOptionsEnum { reference, multicaixa_express }
+
 enum ProfileOptionsEnum {
   edit,
   change_password,
@@ -26,6 +30,8 @@ enum PaymentModalityEnum {
   semiannual,
   yearly,
 }
+
+enum PaymentMulticaixaErrorTypeEnum { expiredTime, serverError }
 
 enum PropertyStatus {
   PUBLISHED, // Disponível para ser agendado para visitas

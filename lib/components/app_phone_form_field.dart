@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class AppPhoneFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -47,7 +47,7 @@ class AppPhoneFormField extends StatelessWidget {
                     const FaIcon(
                       FontAwesomeIcons.solidCircleQuestion,
                       size: 16,
-                      color: Color(0xff687553),
+                      color: primaryColor,
                     ),
                     const SizedBox(width: 6),
                     Flexible(
@@ -72,29 +72,29 @@ class AppPhoneFormField extends StatelessWidget {
               labelText: 'Número de telefone',
               border: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xff687553),
+                  color: primaryColor,
                   width: 2,
                 ),
               ),
-              fillColor: Color(0xff687553),
+              fillColor: primaryColor,
               filled: true,
-              focusColor: Color(0xff687553),
+              focusColor: primaryColor,
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(
-                  color: Color(0xff687553),
+                  color: primaryColor,
                   width: 2,
                 ),
               ),
             ),
             initialCountryCode: 'AO',
             onChanged: (phone) {
-              print(phone.completeNumber);
+              debugPrint(phone.completeNumber);
             },
             pickerDialogStyle: PickerDialogStyle(
               searchFieldInputDecoration: const InputDecoration(
                 // hintText: 'Pesquisar País',
                 labelText: 'Pesquisar País',
-                fillColor: Color(0xff687553),
+                fillColor: primaryColor,
               ),
             ),
           ),
@@ -103,23 +103,3 @@ class AppPhoneFormField extends StatelessWidget {
     );
   }
 }
-
-
-          // AppTextFormField(
-          //   hintText: 'Telefone',
-          //   textInputAction: TextInputAction.next,
-          //   keyboardType: TextInputType.phone,
-          //   onSaved: (phone) => _signUpClientData['phone'] = phone ?? '',
-          //   onChanged: (value) {
-          //     _formKey.currentState?.validate();
-          //     validateSubmitButton();
-          //   },
-          //   validator: (phone) {
-          //     final phoneNumber = phone ?? '';
-          //     if (phoneNumber.isEmpty || !(phoneNumber.length == 9)) {
-          //       return 'Informe um contacto válido';
-          //     }
-          //     return null;
-          //   },
-          //   controller: _phoneController,
-          // ),

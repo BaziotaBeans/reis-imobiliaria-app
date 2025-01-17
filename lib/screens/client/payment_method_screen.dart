@@ -7,7 +7,6 @@ import 'package:reis_imovel_app/components/header.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/enums.dart';
 import 'package:reis_imovel_app/models/OrderList.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
@@ -193,7 +192,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       await Provider.of<OrderList>(
         context,
         listen: false,
-      ).createOrder(data.property.pkProperty, totalValue);
+      ).createOrder(
+          data.property.pkProperty, totalValue, PaymentMethod.REFERENCE.name);
 
       await Provider.of<OrderList>(
         context,
@@ -214,7 +214,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         fontSize: 16.0,
       );
     } catch (e) {
-      print('Error: ${e.toString()}');
+      debugPrint('Error: ${e.toString()}');
 
       await showDialog<void>(
         context: context,

@@ -115,7 +115,7 @@ class _SelectUserTypeState extends State<SelectUserTypeScreen> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+            Navigator.of(context).pushReplacementNamed(AppRoutes.SIGN_IN);
           },
           child: const AppText(
             'Entrar',

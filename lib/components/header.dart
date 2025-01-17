@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
-import 'package:reis_imovel_app/components/go-back-button.dart';
+import 'package:reis_imovel_app/components/new/custom_back_button.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class Header extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -10,22 +11,22 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 70,
       child: Stack(
         children: [
           const Positioned(
-            top: 18,
+            top: 12,
             left: 20,
-            child: GoBackButton(),
+            child: CustomBackButton(),
           ),
           Center(
-            child: AppText(
+            child: CustomText(
               title,
               fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xff3D3F33),
+              fontWeight: FontWeight.w500,
+              color: secondaryColor,
               textAlign: TextAlign.left,
             ),
           )

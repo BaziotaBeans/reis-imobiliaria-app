@@ -4,6 +4,7 @@ import 'package:reis_imovel_app/components/header.dart';
 import 'package:reis_imovel_app/components/reference_code_clip_boad.dart';
 import 'package:reis_imovel_app/dto/Order.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 
 class OrderReferenceScreen extends StatefulWidget {
@@ -120,13 +121,14 @@ class _MyWidgetState extends State<OrderReferenceScreen> {
               'Pague com Referência',
               fontWeight: FontWeight.w700,
               fontSize: 24,
+              color: secondaryColor,
             ),
             const SizedBox(
               height: 16,
             ),
             const AppText(
               'Copie o código abaixo para pagar via Referencia em qualquer banco habilitado.',
-              color: Color(0xaf3c3c43),
+              color: secondaryText,
               maxLines: 4,
               textAlign: TextAlign.center,
               softWrap: true,

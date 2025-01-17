@@ -30,5 +30,16 @@ class AppRoutes {
   static const ALL_IMMOBILE_SCREEN = "/all-immobile-screen";
   static const RESULT_SEARCH_SCREEN = "/result-search-screen";
   static const ONBOARDING_SCREEN = "/onboarding-screen";
+  static const SIGNUP_NORMAL_USER_SCREEN = "/signup-normal-user-screen";
+  static const SIGNUP_PROPERTY_USER_SCREEN = "/signup-property-user-screen";
+  static const SUCCESS_SIGNUP_SCREEN = "/success-signup-screen";
+  static const PAYMENT_MULTICAIXA_EXPRESS_SCREEN =
+      "/payment-multicaixa-express-screen";
+  static const PAYMENT_MULTICAIXA_EXPRESS_SUCCESS_SCREEN =
+      "/payment-multicaixa-express-success-screen";
+  static const SELECT_PROPERTY_TYPE_SCREEN = "/select-property-type-screen";
+  static const NEW_APARTMENT_SCREEN = "/new-apartment-screen";
+  static const SUCCESS_NEW_PROPERTY_SCREEN = "/success-new-property-screen";
+  static const NEW_TERRAIN_SCREEN = "/new-terrain-screen";
 }
 //SelectAnnouncementSaleTypeScreen

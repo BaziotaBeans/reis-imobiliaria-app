@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 
 class DotIndicator extends StatelessWidget {
@@ -18,7 +17,8 @@ class DotIndicator extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: AppConstants.kDefaultDuration,
-      margin: const EdgeInsets.symmetric(horizontal: AppConstants.defaultPadding / 2),
+      margin: const EdgeInsets.symmetric(
+          horizontal: AppConstants.defaultPadding / 2),
       height: 5,
       width: 8,
       decoration: BoxDecoration(

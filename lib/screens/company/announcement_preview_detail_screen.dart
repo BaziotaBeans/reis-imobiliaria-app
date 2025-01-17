@@ -6,6 +6,8 @@ import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/card_detail_image_slider.dart';
 import 'package:reis_imovel_app/components/go-back-button.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
+import 'package:reis_imovel_app/components/new/expandable_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/enums.dart';
 import 'package:reis_imovel_app/models/PropertyList.dart';
@@ -13,6 +15,7 @@ import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class AnnouncementPreviewDetailScreen extends StatefulWidget {
   const AnnouncementPreviewDetailScreen({super.key});
@@ -30,21 +33,21 @@ class _AnnouncementPreviewDetailScreenState
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: ShapeDecoration(
-        color: const Color(0xFF393E67),
+        color: primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      child: AppText(
+      child: CustomText(
         AppUtils.getPropertyStatusLabel(propertyStatus),
         color: Colors.white,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
 
   Widget _cardPrimary(BuildContext context, PropertyResult data) {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: 314,
       child: Stack(
@@ -81,15 +84,19 @@ class _AnnouncementPreviewDetailScreenState
   }
 
   Widget _boxDetailItemExtra(
-      String title, int quantity, BoxDetailItemExtraEnum type) {
+    String title,
+    int quantity,
+    BoxDetailItemExtraEnum type,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppText(
+        CustomText(
           title,
-          color: Colors.grey[600],
+          color: secondaryText,
           fontSize: 14,
           letterSpacing: 0.30,
+          fontWeight: FontWeight.w500,
         ),
         const SizedBox(
           height: 8,
@@ -100,15 +107,15 @@ class _AnnouncementPreviewDetailScreenState
           children: [
             Icon(
               getIconToBoxDetailItemExtra(type),
-              color: const Color(0xFF393E67),
+              color: primaryColor,
               size: 18,
             ),
             const SizedBox(
               width: 4,
             ),
-            AppText(
+            CustomText(
               quantity.toString(),
-              color: const Color(0xFF393E67),
+              color: secondaryText,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.42,
             ),
@@ -122,9 +129,9 @@ class _AnnouncementPreviewDetailScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppText(
+        CustomText(
           title,
-          color: Colors.grey[500],
+          color: secondaryText,
           fontSize: 14,
           fontWeight: FontWeight.w500,
           letterSpacing: 0.30,
@@ -132,9 +139,9 @@ class _AnnouncementPreviewDetailScreenState
         const SizedBox(
           height: 8,
         ),
-        AppText(
+        CustomText(
           value,
-          color: const Color(0xFF393E67),
+          color: primaryColor,
           fontWeight: FontWeight.w500,
           fontSize: 14,
           letterSpacing: 0.36,
@@ -146,7 +153,6 @@ class _AnnouncementPreviewDetailScreenState
   Widget _boxDetail(BuildContext context, PropertyResult data) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(14),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -210,27 +216,18 @@ class _AnnouncementPreviewDetailScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AppText(
-          "Descrição",
-          fontWeight: FontWeight.w700,
-          color: Color(0xff2c3a61),
-        ),
-        const SizedBox(height: 20),
-        if (description != null && description.isNotEmpty)
-          AppText(
-            description,
-            fontSize: 14,
-            color: const Color(0xff2c3a61),
-            height: 1.5,
-          )
-        else
-          const AppText(
-            'N/I',
-            fontSize: 20,
-            fontWeight: FontWeight.w800,
-            color: Color(0xff2c3a61),
-            height: 1.5,
+        ExpandableText(
+          title: "Descrição",
+          description: description ?? 'Sem descrição',
+          titleStyle: const TextStyle(
+            color: secondaryColor,
+            fontWeight: FontWeight.w500,
           ),
+          descriptionStyle: const TextStyle(
+            color: secondaryText,
+            fontSize: 14,
+          ),
+        ),
       ],
     );
   }
@@ -240,7 +237,7 @@ class _AnnouncementPreviewDetailScreenState
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 24),
       decoration: ShapeDecoration(
-        color: const Color(0xFFF5F4F8),
+        color: tagColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -252,22 +249,23 @@ class _AnnouncementPreviewDetailScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              AppText(
+              CustomText(
                 data.property.companyEntity.user.email,
                 // data['companyEntity']['user']['email'],
-                color: const Color(0xFF2C3A61),
-                fontWeight: FontWeight.w700,
+                color: primaryColor,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 0.42,
               ),
               const SizedBox(
                 height: 4,
               ),
-              const AppText(
-                'Corretor de imóveis',
-                color: Color(0xFF2C3A61),
+              const CustomText(
+                'Responsável pelo imóvel',
+                color: secondaryText,
                 fontSize: 12,
                 height: 0,
                 letterSpacing: 0.27,
+                fontWeight: FontWeight.w500,
               ),
             ],
           ),
@@ -275,14 +273,14 @@ class _AnnouncementPreviewDetailScreenState
             children: [
               Icon(
                 Icons.phone,
-                color: Color(0xFF393E67),
+                color: primaryColor,
               ),
               SizedBox(
                 width: 8,
               ),
               Icon(
                 Icons.message,
-                color: Color(0xFF393E67),
+                color: primaryColor,
               ),
             ],
           )
@@ -293,7 +291,8 @@ class _AnnouncementPreviewDetailScreenState
 
   Widget _displayDetail(BuildContext context, PropertyResult data) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding:
+          const EdgeInsets.symmetric(horizontal: defaultPadding, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -302,11 +301,11 @@ class _AnnouncementPreviewDetailScreenState
             children: [
               SizedBox(
                 width: 180,
-                child: AppText(
+                child: CustomText(
                   data.property.title,
-                  color: const Color(0xFF2C3A61),
+                  color: secondaryColor,
                   fontSize: 25,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                   softWrap: false,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -314,10 +313,10 @@ class _AnnouncementPreviewDetailScreenState
               ),
               SizedBox(
                 width: 96,
-                child: AppText(
+                child: CustomText(
                   AppUtils.formatNumberWithSufix(data.property.price),
                   textAlign: TextAlign.right,
-                  color: const Color(0xFF393E67),
+                  color: primaryColor,
                   fontSize: 25,
                   fontWeight: FontWeight.w600,
                   softWrap: false,
@@ -328,7 +327,7 @@ class _AnnouncementPreviewDetailScreenState
             ],
           ),
           const SizedBox(
-            height: 10,
+            height: 4,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -340,26 +339,28 @@ class _AnnouncementPreviewDetailScreenState
                 children: [
                   const Icon(
                     Icons.location_on_rounded,
-                    color: Color(0xFF2C3A61),
+                    color: secondaryColor,
                     size: 20,
                   ),
                   const SizedBox(
                     width: 4,
                   ),
-                  AppText(
+                  CustomText(
                     "${data.property.province}, ${data.property.county}",
-                    color: const Color(0xFF53577A),
+                    color: secondaryText,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                   ),
                 ],
               ),
-              const AppText(
-                'por mês',
-                textAlign: TextAlign.right,
-                color: Color(0xFF53577A),
-                letterSpacing: 0.36,
-              ),
+              if (data.property.fkPropertyTypeEntity.designation ==
+                  'Arrendamento')
+                const CustomText(
+                  'por mês',
+                  textAlign: TextAlign.right,
+                  color: secondaryText,
+                  letterSpacing: 0.36,
+                ),
             ],
           ),
           const SizedBox(height: 40),
@@ -378,11 +379,30 @@ class _AnnouncementPreviewDetailScreenState
       showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: const Text('Ocorreu um erro!'),
-          content: const Text('Não pode remover um imóvel que já foi arrendado.'),
+          backgroundColor: whiteColor,
+          actionsAlignment: MainAxisAlignment.center,
+          title: const Center(
+            child: CustomText(
+              'Ocorreu um erro!',
+              color: errorColor,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+            ),
+          ),
+          content: const CustomText(
+            'Não pode remover um imóvel que já foi arrendado.',
+            color: secondaryText,
+            maxLines: 2,
+            softWrap: true,
+            textAlign: TextAlign.center,
+          ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Ok'),
+              child: const CustomText(
+                'Fechar',
+                color: secondaryText,
+                fontWeight: FontWeight.w500,
+              ),
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
@@ -398,16 +418,35 @@ class _AnnouncementPreviewDetailScreenState
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar'),
-          content: const Text('Tem certeza que deseja excluir este imóvel?'),
+          backgroundColor: whiteColor,
+          actionsAlignment: MainAxisAlignment.center,
+          title: const Center(
+              child: CustomText(
+            'Confirmar',
+            color: primaryColor,
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+          )),
+          content: const CustomText(
+            'Tem certeza que deseja excluir este imóvel?',
+            color: secondaryText,
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Não'),
+              child: const CustomText(
+                'Não',
+                color: secondaryText,
+                fontWeight: FontWeight.w500,
+              ),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Sim'),
+              child: const CustomText(
+                'Sim',
+                color: primaryColor,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         );
@@ -475,7 +514,7 @@ class _AnnouncementPreviewDetailScreenState
               _cardPrimary(context, data),
               _displayDetail(context, data),
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(defaultPadding),
                 child: _contactBox(context, data),
               ),
               const SizedBox(
@@ -492,18 +531,19 @@ class _AnnouncementPreviewDetailScreenState
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Button(
-                          title: 'Editar Imóvel',
-                          fontSize: 14,
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(AppRoutes.ANNOUNCEMENT_SCREEN);
-                          },
-                          variant: ButtonVariant.outlineAlert,
-                        ),
-                      ),
-                      SizedBox(width: 16),
+                      // Editar Imovel
+                      // Expanded(
+                      //   child: Button(
+                      //     title: 'Editar Imóvel',
+                      //     fontSize: 14,
+                      //     onPressed: () {
+                      //       Navigator.of(context)
+                      //           .pushNamed(AppRoutes.ANNOUNCEMENT_SCREEN);
+                      //     },
+                      //     variant: ButtonVariant.outlineAlert,
+                      //   ),
+                      // ),
+                      // SizedBox(width: 16),
                       Expanded(
                         child: Button(
                           title: 'Exluir Imóvel',

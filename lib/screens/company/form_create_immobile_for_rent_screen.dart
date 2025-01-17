@@ -139,6 +139,9 @@ class _FormCreateImmboleForRentState extends State<FormCreateImmboleForRent> {
   Future<void> _submitForm(String propertyType) async {
     setState(() => _isLoading = true);
 
+    debugPrint(
+        "-------------------------------------------ENTROU NO SUBMIT-------------------------------------------");
+
     bool success = await AppUtils.uploadMultipleFilesForUser(
         selectedFiles, addImageToImageList);
 
@@ -179,7 +182,7 @@ class _FormCreateImmboleForRentState extends State<FormCreateImmboleForRent> {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-
+      setState(() => _isLoading = false);
       return;
     }
 

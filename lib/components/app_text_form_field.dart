@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/utils/app_colors.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class AppTextFormField extends StatelessWidget {
   final void Function(String)? onChanged;
@@ -138,7 +139,7 @@ class AppTextFormField extends StatelessWidget {
                 focusColor: AppColors.inputFillColor,
                 focusedBorder: const OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Color(0xff687553),
+                    color: primaryColor,
                     width: 2,
                   ),
                 ),

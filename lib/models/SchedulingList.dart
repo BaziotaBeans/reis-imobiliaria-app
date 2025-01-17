@@ -105,7 +105,7 @@ class SchedulingList with ChangeNotifier {
         notifyListeners();
       }
 
-      await loadSchedulingsByUser();
+      // await loadSchedulingsByUser();
 
       notifyListeners();
     } catch (e) {

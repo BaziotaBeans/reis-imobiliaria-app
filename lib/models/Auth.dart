@@ -12,6 +12,7 @@ import 'package:reis_imovel_app/models/Client.dart';
 import 'package:reis_imovel_app/models/Company.dart';
 import 'package:reis_imovel_app/models/user_signup.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -32,7 +33,18 @@ class Auth with ChangeNotifier {
   // DateTime? _expiryDate;
 
   bool get isAuth {
+    // debugPrint('#############################');
+    // debugPrint('EXISTE DATA EXPIRACAO ${_expiryDate}');
+    // debugPrint('#############################');
     final isValid = _expiryDate?.isAfter(DateTime.now()) ?? false;
+    // debugPrint('#############################');
+    // debugPrint('EXISTE TOKEN ${_token}');
+    // debugPrint('#############################');
+    // debugPrint('#############################');
+    // debugPrint('EXISTE VALIDACAO ${isValid}');
+    // debugPrint('#############################');
+    // debugPrint('RESULTADO: ${_token != null && isValid}');
+
     return _token != null && isValid;
   }
 
@@ -108,6 +120,12 @@ class Auth with ChangeNotifier {
         _maritalStatus = body['maritalStatus'];
         _expiryDate = DateTime.parse(body['expirationDate']);
 
+        final prefs = await SharedPreferences.getInstance();
+
+        await prefs.setString('authToken', body['accessToken']);
+        await prefs.setString('expirationDate', body['expirationDate']);
+        // await prefs.setString('roles', body['roles']);
+
         Store.saveMap('userData', {
           'token': _token,
           'email': _email,
@@ -118,11 +136,15 @@ class Auth with ChangeNotifier {
           'nif': _nif,
           'nationality': _nationality,
           'maritalStatus': _maritalStatus,
-          'expiryDate': _expiryDate
+          'expiryDate': _expiryDate,
+          'roles': _roles,
         });
 
         _autoLogout();
         notifyListeners();
+        debugPrint('#############################');
+        debugPrint('LOGIN FEITO NO PROVIDER AUTH');
+        debugPrint('#############################');
         // print(isAuth);
       }
     } catch (e) {
@@ -325,14 +347,24 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> tryAutoLogin() async {
+    debugPrint('#############################');
+    debugPrint('CHEGUEI AQUI');
+    debugPrint('#############################');
+
     if (isAuth) return;
 
     final userData = await Store.getMap('userData');
+
+    var roles = [];
 
     if (userData.isEmpty) return;
 
     final expiryDate = userData['expiryDate'] as DateTime;
     if (expiryDate.isBefore(DateTime.now())) return;
+
+    if (userData['roles'] != null) {
+      roles = userData['roles'] as List<dynamic>;
+    }
 
     _token = userData['token'];
     _email = userData['email'];
@@ -344,6 +376,7 @@ class Auth with ChangeNotifier {
     _nationality = userData['nationality'];
     _maritalStatus = userData['maritalStatus'];
     _expiryDate = expiryDate;
+    _roles = userData['roles'] ?? [];
 
     _autoLogout();
     notifyListeners();
@@ -354,16 +387,20 @@ class Auth with ChangeNotifier {
     _logoutTimer = null;
   }
 
-  void logout() {
+  void logout() async {
     _token = null;
     _email = null;
     _userId = null;
     _userName = null;
     _roles = [];
     _clearLogoutTimer();
-    Store.remove('userData').then((_) {
+    await Store.remove('userData').then((_) {
       notifyListeners();
     });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('authToken');
+    await prefs.remove('expirationDate');
+    await prefs.remove('roles');
   }
 
   void _autoLogout() {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
-import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/header.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
+import 'package:reis_imovel_app/components/new/custom_button.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class SelectAnnouncementTypeScreen extends StatefulWidget {
   const SelectAnnouncementTypeScreen({super.key});
@@ -45,9 +45,7 @@ class _SelectAnnouncementTypeScreenState
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   width: 2,
-                  color: type == anncounementType
-                      ? AppColors.primaryColor
-                      : const Color(0xFFE2E2E2),
+                  color: type == anncounementType ? primaryColor : blackColor20,
                 ),
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -62,12 +60,16 @@ class _SelectAnnouncementTypeScreenState
                     child: Container(
                       width: 24,
                       height: 24,
-                      decoration: ShapeDecoration(
-                        color: AppColors.primaryColor,
-                        shape: const OvalBorder(),
+                      decoration: const ShapeDecoration(
+                        color: primaryColor,
+                        shape: OvalBorder(),
                       ),
                       child: const Center(
-                        child: Icon(Icons.check, color: Colors.white, size: 16),
+                        child: Icon(
+                          Icons.check,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -77,9 +79,8 @@ class _SelectAnnouncementTypeScreenState
                   child: Icon(
                     Icons.house_siding_outlined,
                     size: 64,
-                    color: anncounementType == type
-                        ? AppColors.primaryColor
-                        : const Color(0xFFE2E2E2),
+                    color:
+                        anncounementType == type ? primaryColor : blackColor20,
                   ),
                 )
               ],
@@ -87,13 +88,12 @@ class _SelectAnnouncementTypeScreenState
           ),
           const SizedBox(height: 10),
           Center(
-            child: AppText(
+            child: CustomText(
               type == 'sale' ? 'Venda' : 'Aluguel',
               textAlign: TextAlign.center,
-              color: anncounementType == type
-                  ? AppColors.primaryColor
-                  : const Color(0xFFE2E2E2),
-              fontWeight: FontWeight.w700,
+              color: anncounementType == type ? primaryColor : blackColor40,
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
             ),
           )
         ],
@@ -133,8 +133,8 @@ class _SelectAnnouncementTypeScreenState
             ),
             Padding(
               padding: const EdgeInsets.all(30),
-              child: Button(
-                title: 'Continuar',
+              child: CustomButton(
+                text: 'Continuar',
                 onPressed: () {
                   Navigator.of(context).pushNamed(
                     anncounementType == 'rent'
@@ -145,7 +145,6 @@ class _SelectAnnouncementTypeScreenState
                         : AppConstants.propertyType[1],
                   );
                 },
-                variant: ButtonVariant.primary,
               ),
             )
           ],

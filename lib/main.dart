@@ -1,3 +1,4 @@
+import 'package:accessibility_tools/accessibility_tools.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,43 +7,21 @@ import 'package:reis_imovel_app/dto/Contract.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/dto/PropertyTypeEntity.dart';
 import 'package:reis_imovel_app/firebase_options.dart';
-// import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/models/ContractList.dart';
 import 'package:reis_imovel_app/models/OrderList.dart';
+import 'package:reis_imovel_app/models/PaymentList.dart';
 import 'package:reis_imovel_app/models/PropertyList.dart';
 import 'package:reis_imovel_app/models/PropertyScheduleList.dart';
 import 'package:reis_imovel_app/models/SchedulingList.dart';
-import 'package:reis_imovel_app/screens/auth/reset-password.dart';
-import 'package:reis_imovel_app/screens/auth/select-user-type.dart';
-import 'package:reis_imovel_app/screens/auth/sign-in.dart';
-import 'package:reis_imovel_app/screens/auth/sign-up-client.dart';
-import 'package:reis_imovel_app/screens/auth/sign-up-company.dart';
-import 'package:reis_imovel_app/screens/auth/sign-up.dart';
-import 'package:reis_imovel_app/screens/auth_or_home_page.dart';
-import 'package:reis_imovel_app/screens/client/all_immobile_screen.dart';
-import 'package:reis_imovel_app/screens/client/contract_list_screen.dart';
-import 'package:reis_imovel_app/screens/client/order_reference_list_screen.dart';
-import 'package:reis_imovel_app/screens/client/order_reference_screen.dart';
-import 'package:reis_imovel_app/screens/client/payment_method_reference_screen.dart';
-import 'package:reis_imovel_app/screens/client/payment_method_screen.dart';
-import 'package:reis_imovel_app/screens/client/payment_method_transfer_screen.dart';
-import 'package:reis_imovel_app/screens/client/payment_success_screen.dart';
-import 'package:reis_imovel_app/screens/client/result_search_screen.dart';
-import 'package:reis_imovel_app/screens/company/announcement_preview_detail_screen.dart';
-import 'package:reis_imovel_app/screens/company/form_create_immobile_for_ground_screen.dart';
-import 'package:reis_imovel_app/screens/company/form_create_immobile_for_rent_screen.dart';
-import 'package:reis_imovel_app/screens/company/select_announcement_sale_type_screen.dart';
-import 'package:reis_imovel_app/screens/company/select_announcement_type.dart';
-import 'package:reis_imovel_app/screens/company/tabs_screen.dart';
-import 'package:reis_imovel_app/screens/contract_screen.dart';
-import 'package:reis_imovel_app/screens/file_upload_screen.dart';
-import 'package:reis_imovel_app/screens/client/immobile_detail_screen.dart';
-import 'package:reis_imovel_app/screens/client/latest_announcement_screen.dart';
-import 'package:reis_imovel_app/screens/multi_step_form_screen.dart';
-import 'package:reis_imovel_app/screens/onboarding_screen.dart';
+import 'package:reis_imovel_app/screens/property/apartment/new_apartament_screen.dart';
+import 'package:reis_imovel_app/screens/property/select_property_type_screen.dart';
+import 'package:reis_imovel_app/screens/property/success_new_property_screen.dart';
+import 'package:reis_imovel_app/screens/property/terrain/new_terrain_screen.dart';
+import 'package:reis_imovel_app/theme/app_theme.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/route/screen_export.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +33,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData();
@@ -80,9 +58,10 @@ class MyApp extends StatelessWidget {
             create: (_) => PropertyScheduleList(),
             update: (ctx, auth, previous) {
               return PropertyScheduleList(
-                  auth.token ?? '',
-                  previous?.propertiesSchedule ?? [],
-                  previous?.propertiesAvailableSchedules ?? []);
+                auth.token ?? '',
+                previous?.propertiesSchedule ?? [],
+                previous?.propertiesAvailableSchedules ?? [],
+              );
             }),
         ChangeNotifierProxyProvider<Auth, SchedulingList>(
             create: (_) => SchedulingList(),
@@ -112,30 +91,45 @@ class MyApp extends StatelessWidget {
                 auth.userId ?? '',
                 previous?.contracts ?? <Contract>[],
                 previous?.contractsByCompany ?? <Contract>[],
+                previous?.currentContract,
               );
             }),
+        ChangeNotifierProxyProvider<Auth, PaymentList>(
+          create: (_) => PaymentList(),
+          update: (ctx, auth, previous) {
+            return PaymentList(
+              auth.token ?? '',
+              previous?.currentPayment,
+            );
+          },
+        )
       ],
       child: MaterialApp(
         title: 'Reis Imóvel',
-        theme: theme.copyWith(
-            colorScheme: theme.colorScheme.copyWith(
-                primary: const Color(0xFF1886F9), secondary: Colors.white),
-            scaffoldBackgroundColor: const Color.fromRGBO(249, 249, 249, 1),
-            bottomSheetTheme:
-                const BottomSheetThemeData(backgroundColor: Colors.white)
-            // useMaterial3: true
-            ),
+        // builder: (context, child) => AccessibilityTools(
+        //   minimumTapAreas: const MinimumTapAreas(
+        //     mobile: 1,
+        //     desktop: 1,
+        //   ),
+        //   enableButtonsDrag: true,
+        //   logLevel: LogLevel.warning,
+        //   checkImageLabels: true,
+        //   checkFontOverflows: true,
+        //   child: child,
+        // ),
+        theme: AppTheme.lightTheme(context),
+        themeMode: ThemeMode.light,
         // localizationsDelegates: const [
         //   GlobalMaterialLocalizations.delegate,
         //   GlobalWidgetsLocalizations.delegate
         // ],
         // supportedLocales: [const Locale('pt', 'BR')],
         debugShowCheckedModeBanner: false,
-        // initialRoute: AppRoutes.ONBOARDING_SCREEN,
+        initialRoute: AppRoutes.Home,
         // initialRoute: AppRoutes.ORDER_REFERENCE_LIST_SCREEN,
         routes: {
           AppRoutes.Home: (ctx) => const AuthOrHomeScreen(),
-          AppRoutes.SIGN_IN: (ctx) => const SignInScreen(),
+          AppRoutes.SIGN_IN: (ctx) => const LoginScreen(),
           AppRoutes.SIGN_UP_CLIENT: (ctx) => const SignUpClientScreen(),
           AppRoutes.SIGN_UP_COMPANY: (ctx) => const SignUpCompany(),
           AppRoutes.RESET_PASSWORD: (ctx) => const ResetPasswordScreen(),
@@ -149,6 +143,8 @@ class MyApp extends StatelessWidget {
               const PaymentMethodReferenceScreen(),
           AppRoutes.PAYMENT_SUCCESS_SCREEN: (ctx) =>
               const PaymentSuccessScreen(),
+          AppRoutes.PAYMENT_MULTICAIXA_EXPRESS_SCREEN: (ctx) =>
+              const PaymentMulticaixaExpressScreen(),
           AppRoutes.ANNOUNCEMENT_SCREEN: (ctx) => const TabsScreenCompany(),
           AppRoutes.SELECT_ANNOUNCEMENT_TYPE: (ctx) =>
               const SelectAnnouncementTypeScreen(),
@@ -174,11 +170,21 @@ class MyApp extends StatelessWidget {
           AppRoutes.ALL_IMMOBILE_SCREEN: (ctx) => const AllImmobileScreen(),
           AppRoutes.RESULT_SEARCH_SCREEN: (ctx) => const ResultSearchScreen(),
           AppRoutes.ONBOARDING_SCREEN: (ctx) => const OnboardingScreen(),
+          AppRoutes.SIGNUP_NORMAL_USER_SCREEN: (ctx) =>
+              const SignUpNormalUserScreen(),
+          AppRoutes.SIGNUP_PROPERTY_USER_SCREEN: (ctx) =>
+              const SignUpPropertyUserScreen(),
+          AppRoutes.SUCCESS_SIGNUP_SCREEN: (ctx) => const SuccessSignUpScreen(),
+          AppRoutes.PAYMENT_MULTICAIXA_EXPRESS_SUCCESS_SCREEN: (ctx) =>
+              const PaymentMulticaixaExpressSuccess(),
+          AppRoutes.SELECT_PROPERTY_TYPE_SCREEN: (ctx) =>
+              const SelectPropertyTypeScreen(),
+          AppRoutes.NEW_APARTMENT_SCREEN: (ctx) => const NewApartmentScreen(),
+          AppRoutes.SUCCESS_NEW_PROPERTY_SCREEN: (ctx) =>
+              const SuccessNewPropertyScreen(),
+          AppRoutes.NEW_TERRAIN_SCREEN: (ctx) => const NewTerrainScreen(),
         },
-        // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
   }
 }
-
-//useMaterial3: true,

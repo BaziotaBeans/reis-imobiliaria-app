@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 
 class CardImmobileHighlight extends StatelessWidget {
@@ -73,13 +73,13 @@ class CardImmobileHighlight extends StatelessWidget {
                 const Icon(
                   Icons.location_on_outlined,
                   size: 16,
-                  color: Color(0xFF687553),
+                  color: primaryColor,
                 ),
                 Expanded(
                   child: Text(
                     "${data.property.province}, ${data.property.county}",
                     style: const TextStyle(
-                      color: Color(0xFF687553),
+                      color: primaryColor,
                       fontSize: 12,
                     ),
                     softWrap: false,

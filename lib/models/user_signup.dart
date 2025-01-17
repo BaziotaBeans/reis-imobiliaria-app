@@ -9,6 +9,7 @@ class UserSignup {
   final String address;
   final String nationality;
   final String maritalStatus;
+  final String urlDocument;
 
   UserSignup({
     required this.username,
@@ -21,6 +22,7 @@ class UserSignup {
     required this.address,
     required this.nationality,
     required this.maritalStatus,
+    required this.urlDocument,
   });
 
   Map<String, dynamic> toJson() {
@@ -35,6 +37,7 @@ class UserSignup {
       'address': address,
       'nationality': nationality,
       'maritalStatus': maritalStatus,
+      'urlDocument': urlDocument,
     };
   }
 }

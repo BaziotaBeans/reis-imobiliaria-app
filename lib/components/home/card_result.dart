@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 
 class CardResult extends StatelessWidget {
@@ -89,7 +90,7 @@ class CardResult extends StatelessWidget {
                 children: [
                   AppText(
                     formatPrice(data.property.price),
-                    color: const Color(0xFF687553),
+                    color: primaryColor,
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),

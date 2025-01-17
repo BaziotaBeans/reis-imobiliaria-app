@@ -11,6 +11,7 @@ class Order {
   final Property property;
   final String orderState;
   final double totalValue;
+  final String? paymentMethod;
 
   Order({
     required this.pkOrder,
@@ -21,7 +22,8 @@ class Order {
     required this.entidade,
     required this.property,
     required this.orderState,
-    required this.totalValue
+    required this.totalValue,
+    required this.paymentMethod,
   });
 
   factory Order.fromJSON(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class Order {
       property: Property.fromJson(json['property']),
       orderState: json['orderState'],
       totalValue: json['totalValue'],
+      paymentMethod: json['paymentMethod'],
     );
   }
 }

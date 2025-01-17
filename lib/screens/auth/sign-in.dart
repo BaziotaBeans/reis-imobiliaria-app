@@ -110,7 +110,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+            Navigator.of(context).pushReplacementNamed(AppRoutes.SIGN_IN);
           },
           child: const AppText(
             'Clique aqui!',
@@ -287,22 +287,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // const AppText(
-                        //   "Bem vindo de volta!",
-                        //   fontSize: 24,
-                        //   fontWeight: FontWeight.w600,
-                        //   color: Color(0xff2c3a61),
-                        // ),
-                        // const SizedBox(
-                        //   height: 6,
-                        // ),
-                        // AppText(
-                        //   'Faça login em sua conta',
-                        //   color: AppColors.gray400,
-                        //   fontSize: 16,
-                        //   fontFamily: 'Inter',
-                        //   fontWeight: FontWeight.w400,
-                        // ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
@@ -311,7 +295,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             const SizedBox(
                               height: 40,
                             ),
-                            _forgetPasswordWidget()
+                            // _forgetPasswordWidget()
                           ],
                         ),
                       ],

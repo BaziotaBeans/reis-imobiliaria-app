@@ -4,11 +4,14 @@ import 'package:reis_imovel_app/components/CountdownTimerWidget.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/header.dart';
+import 'package:reis_imovel_app/components/new/custom_button.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/components/reference_code_clip_boad.dart';
 import 'package:reis_imovel_app/dto/Order.dart';
 import 'package:reis_imovel_app/models/OrderList.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 
 class PaymentMethodReferenceScreen extends StatefulWidget {
@@ -145,24 +148,13 @@ class _PaymentMethodReferenceScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Button(
-          title: 'Ir para pedidos',
-          onPressed: () {
-            Navigator.of(context).pushReplacementNamed(
-              AppRoutes.ORDER_REFERENCE_LIST_SCREEN,
-            );
-          },
-          variant: ButtonVariant.primary,
-        ),
-        const SizedBox(height: 16),
-        Button(
-          title: 'Ir para tela home',
+        CustomButton(
+          text: 'Ir para tela home',
           onPressed: () {
             Navigator.of(context).pushReplacementNamed(
               AppRoutes.Home,
             );
           },
-          variant: ButtonVariant.tertiary,
         ),
       ],
     );
@@ -181,7 +173,7 @@ class _PaymentMethodReferenceScreenState
               'Pague com Referência',
               fontWeight: FontWeight.w700,
               fontSize: 24,
-              color: Color(0xff3D3F33),
+              color: secondaryColor,
             ),
             const SizedBox(
               height: 16,
@@ -218,6 +210,16 @@ class _PaymentMethodReferenceScreenState
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
+      appBar: AppBar(
+        title: const CustomText(
+          'Pagamento Referência',
+          color: secondaryColor,
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+        ),
+        centerTitle: true,
+        leading: const SizedBox(),
+      ),
       body: RefreshIndicator(
         onRefresh: () => _refreshOrder(context),
         child: SafeArea(
@@ -225,7 +227,6 @@ class _PaymentMethodReferenceScreenState
             future: loadLastOrderFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                // Enquanto os dados estão carregando, exibe um spinner
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.error != null) {
                 return const Center(child: Text('Ocorreu um erro!'));
@@ -234,10 +235,6 @@ class _PaymentMethodReferenceScreenState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Header(
-                        title: 'Pagamento Referência',
-                        onPressed: () {},
-                      ),
                       _boxExpress(),
                       const SizedBox(height: 40),
                       if (data != null) _content(data),

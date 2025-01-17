@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/card_immobile_highlight.dart';
-import 'package:reis_imovel_app/data/dummy_data.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
-import 'package:reis_imovel_app/models/Immobile.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class ForSale extends StatelessWidget {
   final List<PropertyResult> data;
@@ -14,7 +13,6 @@ class ForSale extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Immobile> carouselItems = dummyImmobiles;
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Column(
@@ -27,12 +25,12 @@ class ForSale extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const AppText(
+              const CustomText(
                 'Todos Imóveis',
                 textAlign: TextAlign.center,
-                color: Color(0xFF3D3F33),
+                color: secondaryColor,
                 fontSize: 20,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w500,
               ),
               InkWell(
                 onTap: () {
@@ -41,12 +39,12 @@ class ForSale extends StatelessWidget {
                     arguments: data,
                   );
                 },
-                child: const AppText(
+                child: const CustomText(
                   'Ver Todos',
                   textAlign: TextAlign.center,
-                  color: Color(0xFFF88898F),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  color: secondaryText,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
                   height: 1.0,
                 ),
               ),

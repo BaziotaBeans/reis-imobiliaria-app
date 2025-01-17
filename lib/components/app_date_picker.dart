@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 
 class AppDatePicker extends StatelessWidget {
-  final DateTime selectedDate;
+  final DateTime? selectedDate;
   final Function(DateTime) onDateChanged;
 
   const AppDatePicker({
@@ -28,7 +29,7 @@ class AppDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50,
       child: Row(
         children: [
@@ -38,18 +39,15 @@ class AppDatePicker extends StatelessWidget {
                 : 'Data Selecionada: ${DateFormat('dd/MM/y').format(selectedDate!)}'),
           ),
           TextButton(
-            child: Text(
-              'Selecionar Data',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Avenir',
-              ),
-            ),
             style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all<Color>(
                   Theme.of(context).colorScheme.primary),
             ),
             onPressed: () => _showDatePicker(context),
+            child: const CustomText(
+              'Selecionar Data',
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

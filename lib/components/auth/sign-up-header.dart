@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reis_imovel_app/utils/app_colors.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class SignUpHeader extends StatelessWidget {
   const SignUpHeader({super.key});
@@ -24,7 +25,7 @@ class SignUpHeader extends StatelessWidget {
               TextSpan(
                 text: 'Reis',
                 style: TextStyle(
-                  color: Color(0xff687553),
+                  color: primaryColor,
                   fontSize: 24,
                   fontFamily: 'Inter',
                   fontWeight: FontWeight.w700,

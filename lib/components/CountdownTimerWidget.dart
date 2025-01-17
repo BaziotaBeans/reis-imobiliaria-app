@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/index.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
-import 'package:reis_imovel_app/screens/home_screen.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 
 class CountdownTimerWidget extends StatefulWidget {
@@ -9,8 +8,11 @@ class CountdownTimerWidget extends StatefulWidget {
 
   final int diffBetweenDate;
 
-  const CountdownTimerWidget(
-      {required this.expiryDate, required this.diffBetweenDate});
+  const CountdownTimerWidget({
+    required this.expiryDate,
+    required this.diffBetweenDate,
+    super.key,
+  });
 
   @override
   State<CountdownTimerWidget> createState() => _CountdownTimerWidgetState();

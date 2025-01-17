@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:gallery_picker/gallery_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 import 'package:reis_imovel_app/data/county_data.dart';
+import 'package:reis_imovel_app/dto/Property.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/enums.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
@@ -157,6 +159,9 @@ class AppUtils {
   ) async {
     bool result = false;
 
+    debugPrint(
+        "-------------------------------------------ENTROU NO UPLOAD-------------------------------------------");
+
     for (MediaFile mediaFile in files) {
       try {
         File file = await mediaFile.getFile();
@@ -164,7 +169,12 @@ class AppUtils {
         final fileName = file.path.split("/").last;
         final timestamp = DateTime.now().microsecondsSinceEpoch;
         final uploadRef = storageRef.child("uploads/$timestamp-$fileName");
-        final response = await uploadRef.putFile(file);
+
+        final metadata = SettableMetadata(
+          contentType: 'image/*', // Permite qualquer tipo de imagem
+        );
+
+        final response = await uploadRef.putFile(file, metadata);
 
         var downloadURL = await response.ref.getDownloadURL();
 
@@ -172,11 +182,44 @@ class AppUtils {
 
         result = true;
       } catch (e) {
-        print(e);
+        debugPrint(
+            "-------------------------------------------ERRO NO UPLOAD-------------------------------------------");
+        debugPrint("$e");
+        debugPrint(
+            "-------------------------------------------ERRO NO UPLOAD-------------------------------------------");
         result = false;
       }
     }
     return result;
+  }
+
+  static Future<bool> uploadPDF(
+    PlatformFile pdfFile,
+    void Function(String) addDocument,
+  ) async {
+    try {
+      final file = File(pdfFile.path!);
+      final storageRef = FirebaseStorage.instance.ref();
+      final timestamp = DateTime.now().microsecondsSinceEpoch;
+      final uploadRef =
+          storageRef.child("documents/$timestamp-${pdfFile.name}");
+
+      final metadata = SettableMetadata(
+        contentType: 'application/pdf',
+      );
+
+      final response = await uploadRef.putFile(file, metadata);
+
+      final downloadURL = await response.ref.getDownloadURL();
+      print("PDF disponível em: $downloadURL");
+
+      addDocument(downloadURL);
+
+      return true;
+    } catch (e) {
+      debugPrint("Erro no upload: $e");
+      return false;
+    }
   }
 
   static Future<List<Reference>?> getUsersUploadedFiles() async {
@@ -289,26 +332,57 @@ class AppUtils {
   static String getPaymentModalityTextForContract(String paymentModality) {
     if (paymentModality == 'Mensal') {
       return 'mensalmente';
-    }
-    else if (paymentModality == 'Trimestral') {
+    } else if (paymentModality == 'Trimestral') {
       return 'trimestralmente';
-    }
-    else if (paymentModality == 'Semestral') {
+    } else if (paymentModality == 'Semestral') {
       return 'semestralmente';
     }
     return 'anualmente';
   }
- 
+
   static String getPaymentModalityForContract(String paymentModality) {
     if (paymentModality == 'Mensal') {
       return 'mês';
-    }
-    else if (paymentModality == 'Trimestral') {
+    } else if (paymentModality == 'Trimestral') {
       return 'trimestre';
-    }
-    else if (paymentModality == 'Semestral') {
+    } else if (paymentModality == 'Semestral') {
       return 'semestre';
     }
     return 'ano';
+  }
+
+  static isContractDateValid(String? contractDate) {
+    DateTime parsedContractDate =
+        DateTime.parse(contractDate ?? DateTime.now().toString());
+
+    DateTime now = DateTime.now();
+
+    return parsedContractDate.isAfter(now);
+  }
+
+  static String getFirstAndLastName(String fullName) {
+    // Remove espaços extras e divide o nome em partes
+    List<String> parts = fullName.trim().split(RegExp(r'\s+'));
+
+    // Retorna o primeiro e o último nome
+    if (parts.length >= 2) {
+      return '${parts.first} ${parts.last}';
+    } else if (parts.length == 1) {
+      // Caso o nome tenha apenas uma palavra, retorna ela mesma
+      return parts.first;
+    }
+    return ''; // Retorna vazio se não houver nome
+  }
+
+  static String? getPropertyType(Property? property) {
+    return property?.fkPropertyTypeEntity?.designation;
+  }
+
+  static String getPaymentMethodLabel(String value) {
+    if (value == 'MULTICAIXA_EXPRESS') {
+      return 'Multicaixa Express';
+    } else {
+      return 'Referência';
+    }
   }
 }

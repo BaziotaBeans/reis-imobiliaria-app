@@ -51,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Enquanto os dados estão carregando, exibe um spinner
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.error != null) {
+                debugPrint('ERRO AO CARREGAR: $snapshot.error');
                 return const Center(child: Text('Ocorreu um erro!'));
               } else {
                 return SingleChildScrollView(

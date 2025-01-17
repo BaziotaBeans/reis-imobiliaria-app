@@ -35,6 +35,10 @@ class Property with ChangeNotifier {
 
   final String fkPropertyType;
 
+  final double? latitude;
+
+  final double? longitude;
+
   final List<String> images;
 
   Property({
@@ -55,6 +59,8 @@ class Property with ChangeNotifier {
     required this.status,
     required this.fkCompany,
     required this.fkPropertyType,
-    required this.images
+    required this.images,
+    required this.latitude,
+    required this.longitude,
   });
 }

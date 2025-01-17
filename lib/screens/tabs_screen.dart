@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:reis_imovel_app/screens/explore/explore_screen.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
-import 'package:reis_imovel_app/screens/explore_screen.dart';
-import 'package:reis_imovel_app/screens/favorite_screen.dart';
+// import 'package:reis_imovel_app/screens/explore_screen.dart';
 import 'package:reis_imovel_app/screens/home_screen.dart';
 import 'package:reis_imovel_app/screens/profile_screen.dart';
 import 'package:reis_imovel_app/screens/reservation_screen.dart';
@@ -49,29 +50,41 @@ class _TabsScreenState extends State<TabsScreen> {
         onTap: (i) => setState(() => _selectedScreenIndex = i),
         backgroundColor: Colors.white,
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-        unselectedItemColor: const Color(0xFF687553),
+        unselectedItemColor: blackColor40,
         items: [
           SalomonBottomBarItem(
-            icon: const FaIcon(FontAwesomeIcons.house, size: 24),
+            icon: const FaIcon(
+              FontAwesomeIcons.house,
+              size: 18,
+            ),
             title: Text("Home", style: getSalomonBottomBarItemTextStyle()),
-            selectedColor: const Color(0xFF687553),
+            selectedColor: primaryColor,
           ),
           SalomonBottomBarItem(
-            icon: const FaIcon(FontAwesomeIcons.magnifyingGlass, size: 24),
+            icon: const FaIcon(
+              FontAwesomeIcons.magnifyingGlass,
+              size: 18,
+            ),
             title: Text("Explorar", style: getSalomonBottomBarItemTextStyle()),
-            selectedColor: const Color(0xFF687553),
+            selectedColor: primaryColor,
           ),
           SalomonBottomBarItem(
-            icon: const FaIcon(FontAwesomeIcons.fileInvoice, size: 24),
+            icon: const FaIcon(
+              FontAwesomeIcons.fileInvoice,
+              size: 18,
+            ),
             title: Text("Reservas", style: getSalomonBottomBarItemTextStyle()),
-            selectedColor: const Color(0xFF687553),
+            selectedColor: primaryColor,
           ),
 
           /// Profile
           SalomonBottomBarItem(
-            icon: const FaIcon(FontAwesomeIcons.user, size: 24),
+            icon: const FaIcon(
+              FontAwesomeIcons.user,
+              size: 18,
+            ),
             title: Text("Perfil", style: getSalomonBottomBarItemTextStyle()),
-            selectedColor: const Color(0xFF687553),
+            selectedColor: primaryColor,
           ),
         ],
       ),

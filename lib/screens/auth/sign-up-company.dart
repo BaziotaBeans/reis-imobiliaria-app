@@ -111,17 +111,17 @@ class _SignUpCompanyState extends State<SignUpCompany> {
     Auth auth = Provider.of(context, listen: false);
 
     final user = UserSignup(
-      username: _formData['username']!,
-      fullName: _formData['fullName']!,
-      email: _formData['email']!,
-      password: _formData['password']!,
-      phone: _formData['phone']!,
-      role: ["company"],
-      nif: _formData['nif']!,
-      address: _formData['addres']!,
-      nationality: _formData['nationality']!,
-      maritalStatus: _formData['maritalStatus']!,
-    );
+        username: _formData['username']!,
+        fullName: _formData['fullName']!,
+        email: _formData['email']!,
+        password: _formData['password']!,
+        phone: _formData['phone']!,
+        role: ["company"],
+        nif: _formData['nif']!,
+        address: _formData['addres']!,
+        nationality: _formData['nationality']!,
+        maritalStatus: _formData['maritalStatus']!,
+        urlDocument: '');
 
     final company = Company(
       nif: _formData["nif"]!,
@@ -133,7 +133,7 @@ class _SignUpCompanyState extends State<SignUpCompany> {
     try {
       await auth.signupWithCompany(user, company);
 
-      Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+      Navigator.of(context).pushReplacementNamed(AppRoutes.SIGN_IN);
 
       Fluttertoast.showToast(
         msg: "Conta criada com sucesso",
@@ -382,7 +382,7 @@ class _SignUpCompanyState extends State<SignUpCompany> {
         ),
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(AppRoutes.SIGN_IN);
+            Navigator.of(context).pushReplacementNamed(AppRoutes.SIGN_IN);
           },
           child: Text(
             'Entrar',

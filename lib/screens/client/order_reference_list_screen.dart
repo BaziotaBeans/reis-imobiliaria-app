@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+import 'package:reis_imovel_app/components/new/custom_button.dart';
 import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
-import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/header.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
+import 'package:reis_imovel_app/components/new/dialog_widget.dart';
+import 'package:reis_imovel_app/components/new/toast_widget.dart';
 import 'package:reis_imovel_app/components/timer_box.dart';
 import 'package:reis_imovel_app/dto/Order.dart';
 import 'package:reis_imovel_app/models/OrderList.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 
 class OrderReferenceListScreen extends StatefulWidget {
@@ -21,6 +23,8 @@ class OrderReferenceListScreen extends StatefulWidget {
 
 class _OrderReferenceListScreenState extends State<OrderReferenceListScreen> {
   Future? _loadOrders;
+
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -40,20 +44,34 @@ class _OrderReferenceListScreenState extends State<OrderReferenceListScreen> {
     });
   }
 
-  Widget showEmptyMessage() {
-    double height = MediaQuery.of(context).size.height / 3;
+  Future<void> _deleteOrder(String pkOrder) async {
+    setState(() => _isLoading = true);
 
-    return SizedBox(
-      height: height,
-      child: Center(
-        child: AppText(
-          'Sem pedidos',
-          color: Colors.grey[400],
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
+    try {
+      await Provider.of<OrderList>(
+        context,
+        listen: false,
+      ).deleteOrder(pkOrder);
+
+      if (mounted) {
+        await _refreshOrders(context);
+        ToastWidget.showSuccessToast("Pedido cancelado com sucesso");
+      }
+    } catch (e) {
+      if (mounted) {
+        await DialogWidget.showErrorDialog(
+          context: context,
+          title: 'Ocorreu um erro!',
+          message: 'Não foi possível cancelar o pedido.',
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Widget _orderCard(BuildContext context, Order order) {
@@ -68,15 +86,20 @@ class _OrderReferenceListScreenState extends State<OrderReferenceListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(defaultPadding),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  AppText(
-                    "Pedido #10291",
-                    color: Colors.grey[600],
-                    fontWeight: FontWeight.w600,
+                  const CustomText(
+                    "Pedido",
+                    color: secondaryText,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  CustomText(
+                    "Referência - ${order.reference}",
+                    color: secondaryText,
+                    fontWeight: FontWeight.w500,
                   ),
                 ],
               ),
@@ -101,18 +124,18 @@ class _OrderReferenceListScreenState extends State<OrderReferenceListScreen> {
                             order.expirationDate,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        const AppText(
+                        const SizedBox(height: 6),
+                        const CustomText(
                           "Pagamento pendente",
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
                           color: Color(0xff3D3F33),
                         ),
-                        const SizedBox(height: 4),
-                        AppText(
+                        const SizedBox(height: 6),
+                        CustomText(
                           formatPrice(order.totalValue),
-                          fontSize: 14,
-                          color: const Color(0xff3D3F33),
+                          fontSize: 16,
+                          color: secondaryColor,
                         ),
                       ],
                     ),
@@ -122,25 +145,33 @@ class _OrderReferenceListScreenState extends State<OrderReferenceListScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Button(
-                          title: 'Visualizar',
+                        CustomButton(
+                          text: 'Visualizar',
                           onPressed: () {
-                            Navigator.of(context).pushReplacementNamed(
+                            Navigator.of(context).pushNamed(
                               AppRoutes.ORDER_REFERENCE_SCREEN,
                               arguments: order,
                             );
                           },
-                          variant: ButtonVariant.primary,
-                          fontSize: 12,
-                          minimumSize: 30,
+                          fontSize: 14,
                         ),
-                        Button(
-                          title: 'Cancelar',
-                          onPressed: () {},
-                          variant: ButtonVariant.outline,
-                          fontSize: 12,
-                          minimumSize: 30,
-                        ),
+                        const SizedBox(height: 10),
+                        if (_isLoading)
+                          const Center(
+                            child:
+                                CircularProgressIndicator(color: primaryColor),
+                          )
+                        else
+                          CustomButton(
+                            text: 'Cancelar',
+                            variant: ButtonVariant.outline,
+                            onPressed: () {
+                              _deleteOrder(order.pkOrder);
+                            },
+                            fontSize: 14,
+                            forcedBackgroundColor: whiteColor,
+                            // minimumSize: 30,
+                          ),
                       ],
                     ),
                   )
@@ -160,34 +191,68 @@ class _OrderReferenceListScreenState extends State<OrderReferenceListScreen> {
     List<Order> orders = orderList.ordersByUser;
 
     return Scaffold(
+      backgroundColor: whiteColor,
+      appBar: AppBar(
+        title: const CustomText(
+          'Pedidos',
+          fontWeight: FontWeight.w500,
+          color: secondaryColor,
+          fontSize: 16,
+        ),
+        centerTitle: true,
+      ),
       body: RefreshIndicator(
+        color: primaryColor,
+        backgroundColor: whiteColor,
         onRefresh: () => _refreshOrders(context),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Header(title: 'Pedidos'),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  padding: const EdgeInsets.all(4),
-                  child: orders.isEmpty
-                      ? showEmptyMessage()
-                      : ListView.separated(
-                          itemBuilder: (_, i) {
-                            return _orderCard(context, orders[i]);
-                          },
-                          separatorBuilder: (_, index) {
-                            return const Divider(
-                              color: Colors.transparent,
-                              height: 4,
-                            );
-                          },
-                          itemCount: orders.length,
-                        ),
-                )
-              ],
-            ),
+          child: FutureBuilder(
+            future: _loadOrders,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                debugPrint('############ERROR########');
+                debugPrint('${snapshot.error}');
+                debugPrint('##########################');
+                return const Center(child: Text('Ocorreu um erro!'));
+              } else {
+                if (orders.isEmpty) {
+                  return const Center(
+                    child: CustomText(
+                      'Sem Pedidos',
+                      color: secondaryText,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
+                } else {
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.height,
+                          padding: const EdgeInsets.all(4),
+                          child: ListView.separated(
+                            itemBuilder: (_, i) {
+                              return _orderCard(context, orders[i]);
+                            },
+                            separatorBuilder: (_, index) {
+                              return const Divider(
+                                color: Colors.transparent,
+                                height: 4,
+                              );
+                            },
+                            itemCount: orders.length,
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                }
+              }
+            },
           ),
         ),
       ),

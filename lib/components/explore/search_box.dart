@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/dto/PropertyTypeEntity.dart';
-import 'package:reis_imovel_app/models/PropertyList.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class SearchBox extends StatefulWidget {
   final List<PropertyTypeEntity> propertyTypes;
@@ -27,27 +26,28 @@ class _SearchBoxState extends State<SearchBox> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
-              decoration: const InputDecoration(
-                hintText: 'Provínicia, Municipio, Endereço',
-                hintStyle: TextStyle(
-                  color: Color(0xFF3D3F33),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-                prefixIcon: Icon(
-                  Icons.location_on_outlined,
-                  color: Color(0xfff687553),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Color(0xFF687553),
-                    width: 2,
-                  ),
+            decoration: const InputDecoration(
+              hintText: 'Provínicia, Municipio, Endereço',
+              hintStyle: TextStyle(
+                color: Color(0xFF3D3F33),
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+              ),
+              prefixIcon: Icon(
+                Icons.location_on_outlined,
+                color: primaryColor,
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  color: primaryColor,
+                  width: 2,
                 ),
               ),
-              onChanged: (value) {
-                widget.onChangeTextField(value);
-              }),
+            ),
+            onChanged: (value) {
+              widget.onChangeTextField(value);
+            },
+          ),
           const SizedBox(height: 10),
           DropdownButtonFormField<String>(
             decoration: const InputDecoration(

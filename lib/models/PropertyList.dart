@@ -51,6 +51,8 @@ class PropertyList with ChangeNotifier {
       'images': data['images'] as List<String>,
       'propertyStatus': data['propertyStatus'],
       'schedules': data['schedules'],
+      'latitude': data['latitude'] as double,
+      'longitude': data['longitude'] as double,
     });
 
     final property = Property(
@@ -71,6 +73,8 @@ class PropertyList with ChangeNotifier {
       fkCompany: _userId,
       fkPropertyType: data['fkPropertyType'] as String,
       images: data['images'] as List<String>,
+      latitude: data['latitude'] as double,
+      longitude: data['longitude'] as double,
     );
 
     if (hasId) {
@@ -146,10 +150,14 @@ class PropertyList with ChangeNotifier {
         ),
       );
 
-      List<dynamic> jsonData = response.data;
+      if (response.data.toString().isEmpty) {
+        _propertiesCompany = [];
+      } else {
+        List<dynamic> jsonData = response.data;
 
-      _propertiesCompany =
-          jsonData.map((data) => PropertyResult.fromJson(data)).toList();
+        _propertiesCompany =
+            jsonData.map((data) => PropertyResult.fromJson(data)).toList();
+      }
 
       // _propertiesCompany = response.data;
 

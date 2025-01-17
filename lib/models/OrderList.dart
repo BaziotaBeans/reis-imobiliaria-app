@@ -42,9 +42,11 @@ class OrderList with ChangeNotifier {
         ),
       );
 
-      List<dynamic> jsonData = response.data;
+      if (response.data.toString().isNotEmpty) {
+        List<dynamic> jsonData = response.data;
 
-      _ordersByUser = jsonData.map((data) => Order.fromJSON(data)).toList();
+        _ordersByUser = jsonData.map((data) => Order.fromJSON(data)).toList();
+      }
 
       notifyListeners();
     } catch (e) {
@@ -69,10 +71,14 @@ class OrderList with ChangeNotifier {
       if (response.data.toString().isNotEmpty) {
         _currentOrder = Order.fromJSON(response.data);
       }
-    } catch (e) {}
+    } catch (e) {
+      throw Exception('Ocorreu erro ao buscar o ultimo pedido: ' + e.toString())
+          .toString();
+    }
   }
 
-  Future<void> createOrder(String pkProperty, double totalValue) async {
+  Future<void> createOrder(
+      String pkProperty, double totalValue, String paymentMethod) async {
     const url = "${AppConstants.baseUrl}orders/";
 
     final formattedData = {
@@ -80,10 +86,11 @@ class OrderList with ChangeNotifier {
       'propertyId': pkProperty,
       "entidade": "00750",
       "totalValue": totalValue,
+      "paymentMethod": paymentMethod
     };
 
     try {
-      final response = await dio.post(
+      await dio.post(
         url,
         data: formattedData,
         options: Options(
@@ -95,7 +102,28 @@ class OrderList with ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      throw Exception('Ocorreu ao criar a ordem: ' + e.toString()).toString();
+      throw Exception('Ocorreu ao erro criar o pedido: ' + e.toString())
+          .toString();
+    }
+  }
+
+  Future<void> deleteOrder(String pkOrder) async {
+    final url = "${AppConstants.baseUrl}orders/$pkOrder";
+
+    try {
+      await dio.delete(
+        url,
+        options: Options(
+          headers: {"Authorization": "Bearer $_token"},
+          contentType: Headers.jsonContentType, //'application/json'
+          responseType: ResponseType.json,
+        ),
+      );
+
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Ocorreu ao erro remover o pedido: ' + e.toString())
+          .toString();
     }
   }
 }

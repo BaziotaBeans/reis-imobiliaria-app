@@ -137,6 +137,8 @@ class _FormCreateImmobileForGroundState
         fontSize: 16.0,
       );
 
+      setState(() => _isLoading = false);
+
       return;
     }
 
@@ -158,7 +160,7 @@ class _FormCreateImmobileForGroundState
         fontSize: 16.0,
       );
     } catch (e) {
-      print('Error: ${e.toString()}');
+      debugPrint('Error: ${e.toString()}');
 
       await showDialog<void>(
         context: context,

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/header.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/dto/Contract.dart';
 import 'package:reis_imovel_app/models/ContractList.dart';
-import 'package:reis_imovel_app/utils/app_constants.dart';
-import 'package:reis_imovel_app/utils/app_routes.dart';
-import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/screens/contract/components/contract_card.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class ContractListScreen extends StatefulWidget {
   const ContractListScreen({super.key});
@@ -17,22 +16,6 @@ class ContractListScreen extends StatefulWidget {
 
 class _ContractListScreenState extends State<ContractListScreen> {
   Future? _loadContractsFuture;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   Provider.of<ContractList>(
-  //     context,
-  //     listen: false,
-  //   ).loadContracts();
-  // }
-
-  // Future<void> _refreshProperties(BuildContext context) {
-  //   return Provider.of<ContractList>(
-  //     context,
-  //     listen: false,
-  //   ).loadContracts();
-  // }
 
   @override
   void initState() {
@@ -52,74 +35,6 @@ class _ContractListScreenState extends State<ContractListScreen> {
     });
   }
 
-  Widget _contractCard(BuildContext context, Contract data) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          AppRoutes.CONTRACT_SCREEN,
-          arguments: data,
-        );
-      },
-      child: Card(
-        color: Colors.white,
-        borderOnForeground: true,
-        surfaceTintColor: Colors.white,
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppText(
-                data.property.title,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              AppText(
-                "${data.property.province}, ${data.property.county}",
-                color: Colors.grey[700],
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              AppText(
-                "Tipo: ${AppUtils.getPropertyTypeLabel(data.property.fkPropertyType)}",
-                color: Colors.grey[700],
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              if (data.property.fkPropertyType ==
-                      AppConstants.propertyTypeGround ||
-                  data.property.fkPropertyType == AppConstants.propertyTypeSale)
-                AppText(
-                  'Data da compra: ${AppUtils.formatDateDayMounthAndYear(data.startDate)}',
-                  color: Colors.grey[700],
-                ),
-              if (data.property.fkPropertyType == AppConstants.propertyTypeRent)
-                AppText(
-                  'Data de início: ${AppUtils.formatDateDayMounthAndYear(data.startDate)}',
-                  color: Colors.grey[700],
-                ),
-              const SizedBox(
-                height: 14,
-              ),
-              if ((data.property.fkPropertyType ==
-                  AppConstants.propertyTypeRent))
-                AppText(
-                  'Data de termino: ${AppUtils.formatDateDayMounthAndYear(data.endDate ?? DateTime.now().toString())}',
-                  color: Colors.grey[700],
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     ContractList contractList = Provider.of(context);
@@ -128,16 +43,18 @@ class _ContractListScreenState extends State<ContractListScreen> {
 
     return Scaffold(
       body: RefreshIndicator(
+        backgroundColor: whiteColor,
         onRefresh: () => _refreshProperties(context),
-        child: SafeArea(
-          child: FutureBuilder(
+        child: Scaffold(
+          backgroundColor: whiteColor,
+          body: SafeArea(
+            child: FutureBuilder(
               future: _loadContractsFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Enquanto os dados estão carregando, exibe um spinner
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.error != null) {
-                  return const Center(child: Text('Ocorreu um erro!'));
+                  return const Center(child: CustomText('Ocorreu um erro!'));
                 } else {
                   return SingleChildScrollView(
                     child: Column(
@@ -146,10 +63,14 @@ class _ContractListScreenState extends State<ContractListScreen> {
                         const Header(title: 'Contratos'),
                         Container(
                           height: MediaQuery.of(context).size.height,
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(defaultPadding),
                           child: ListView.separated(
                             itemBuilder: (_, i) {
-                              return _contractCard(context, contracts[i]);
+                              return ContractCard(
+                                context: context,
+                                data: contracts[i],
+                                index: i + 1,
+                              );
                             },
                             separatorBuilder: (_, index) {
                               return const Divider(
@@ -164,7 +85,9 @@ class _ContractListScreenState extends State<ContractListScreen> {
                     ),
                   );
                 }
-              }),
+              },
+            ),
+          ),
         ),
       ),
     );

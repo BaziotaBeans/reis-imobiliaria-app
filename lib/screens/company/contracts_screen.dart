@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
-import 'package:reis_imovel_app/components/header.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/dto/Contract.dart';
 import 'package:reis_imovel_app/models/ContractList.dart';
-import 'package:reis_imovel_app/utils/app_constants.dart';
-import 'package:reis_imovel_app/utils/app_routes.dart';
-import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/screens/contract/components/contract_card.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class ContractsScreen extends StatefulWidget {
   const ContractsScreen({super.key});
@@ -36,87 +34,6 @@ class _ContractsScreenState extends State<ContractsScreen> {
     });
   }
 
-  Widget _contractCard(BuildContext context, Contract data) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed(
-          AppRoutes.CONTRACT_SCREEN,
-          arguments: data,
-        );
-      },
-      child: Card(
-        color: Colors.white,
-        borderOnForeground: true,
-        surfaceTintColor: Colors.white,
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppText(
-                data.property.title,
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              AppText(
-                "${data.property.province}, ${data.property.county}",
-                color: Colors.grey[700],
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              AppText(
-                "Tipo: ${AppUtils.getPropertyTypeLabel(data.property.fkPropertyType)}",
-                color: Colors.grey[700],
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              if (data.property.fkPropertyType ==
-                      AppConstants.propertyTypeGround ||
-                  data.property.fkPropertyType == AppConstants.propertyTypeSale)
-                AppText(
-                  'Data da compra: ${AppUtils.formatDateDayMounthAndYear(data.startDate)}',
-                  color: Colors.grey[700],
-                ),
-              if (data.property.fkPropertyType == AppConstants.propertyTypeRent)
-                AppText(
-                  'Data de início: ${AppUtils.formatDateDayMounthAndYear(data.startDate)}',
-                  color: Colors.grey[700],
-                ),
-              const SizedBox(
-                height: 14,
-              ),
-              if ((data.property.fkPropertyType ==
-                  AppConstants.propertyTypeRent))
-                AppText(
-                  'Data de termino: ${AppUtils.formatDateDayMounthAndYear(data.endDate ?? DateTime.now().toString())}',
-                  color: Colors.grey[700],
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _emptyBox() {
-    return Container(
-      width: double.infinity,
-      height: 75,
-      decoration: ShapeDecoration(
-        color: Color(0xFFF5F4F8),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     ContractList contractList = Provider.of(context);
@@ -124,29 +41,44 @@ class _ContractsScreenState extends State<ContractsScreen> {
     List<Contract> contracts = contractList.contractsByCompany;
 
     return Scaffold(
+      backgroundColor: whiteColor,
       body: RefreshIndicator(
         onRefresh: () => _refreshProperties(context),
+        backgroundColor: whiteColor,
+        color: primaryColor,
         child: SafeArea(
           child: FutureBuilder(
-              future: _loadContractsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // Enquanto os dados estão carregando, exibe um spinner
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.error != null) {
-                  return const Center(child: Text('Ocorreu um erro!'));
+            future: _loadContractsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.error != null) {
+                return const Center(child: CustomText('Ocorreu um erro!'));
+              } else {
+                if (contracts.isEmpty) {
+                  return const Center(
+                    child: CustomText(
+                      'Sem Agendamentos',
+                      color: secondaryText,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  );
                 } else {
                   return SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Header(title: 'Contratos'),
                         Container(
                           height: MediaQuery.of(context).size.height,
-                          padding: const EdgeInsets.all(4),
+                          padding: const EdgeInsets.all(defaultPadding),
                           child: ListView.separated(
                             itemBuilder: (_, i) {
-                              return _contractCard(context, contracts[i]);
+                              return ContractCard(
+                                context: context,
+                                data: contracts[i],
+                                index: i + 1,
+                              );
                             },
                             separatorBuilder: (_, index) {
                               return const Divider(
@@ -161,7 +93,9 @@ class _ContractsScreenState extends State<ContractsScreen> {
                     ),
                   );
                 }
-              }),
+              }
+            },
+          ),
         ),
       ),
     );

@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/button.dart';
+import 'package:reis_imovel_app/components/new/dialog_widget.dart';
+import 'package:reis_imovel_app/components/new/toast_widget.dart';
 import 'package:reis_imovel_app/dto/Scheduling.dart';
 import 'package:reis_imovel_app/models/Auth.dart';
 import 'package:reis_imovel_app/models/SchedulingList.dart';
-import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 import 'package:reis_imovel_app/utils/formatPrice.dart';
 
 class CardReservation extends StatefulWidget {
   final Scheduling data;
+  final Future<void> Function(BuildContext) onRefresh;
 
-  const CardReservation({required this.data, super.key});
+  const CardReservation({
+    required this.data,
+    required this.onRefresh,
+    super.key,
+  });
 
   @override
   State<CardReservation> createState() => _CardReservationState();
@@ -24,8 +30,7 @@ class _CardReservationState extends State<CardReservation> {
 
   bool _isLoading = false;
 
-  Future<void> _deleteProperty(
-      BuildContext context, String pkScheduling) async {
+  Future<void> _deleteProperty(String pkScheduling) async {
     setState(() => _isLoading = true);
 
     try {
@@ -34,36 +39,25 @@ class _CardReservationState extends State<CardReservation> {
         listen: false,
       ).deleteScheduling(pkScheduling);
 
-      // Navigator.of(context).pushNamed(AppRoutes.Home);
-
-      Fluttertoast.showToast(
-        msg: "Agenda cancelada com sucesso",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.green[700],
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      if (mounted) {
+        await widget.onRefresh(context);
+        ToastWidget.showSuccessToast("Agenda cancelada com sucesso");
+      }
     } catch (e) {
-      showDialog<void>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: const Text('Ocorreu um erro!'),
-          content: const Text('Não foi cancelar o agendamento.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-            ),
-          ],
-        ),
-      );
+      if (mounted) {
+        await DialogWidget.showErrorDialog(
+          context: context,
+          title: 'Ocorreu um erro!',
+          message: 'Não foi possível cancelar o agendamento.',
+        );
+      }
     } finally {
-      setState(() => _isLoading = false);
-      setState(() => _expanded = false);
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+          _expanded = false;
+        });
+      }
     }
   }
 
@@ -99,7 +93,7 @@ class _CardReservationState extends State<CardReservation> {
               widget.data.property.title,
               fontWeight: FontWeight.w900,
               fontSize: 18,
-              color: const Color(0xff687553),
+              color: primaryColor,
             ),
             subtitle: AppText(
               "${widget.data.property.province}, ${widget.data.property.county}",
@@ -196,12 +190,15 @@ class _CardReservationState extends State<CardReservation> {
                       widget.data.property.companyEntity.user.phone),
                   const SizedBox(height: 16),
                   if (_isLoading)
-                    const Center(child: CircularProgressIndicator())
+                    const Center(
+                        child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ))
                   else if (_auth.roles?.contains("ROLE_USER") == true)
                     Button(
                       title: 'Cancelar Reserva',
                       onPressed: () {
-                        _deleteProperty(context, widget.data.pkScheduling);
+                        _deleteProperty(widget.data.pkScheduling);
                       },
                       variant: ButtonVariant.outlineAlert,
                     )

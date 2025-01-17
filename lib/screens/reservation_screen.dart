@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/card_reservation.dart';
+import 'package:reis_imovel_app/components/new/custom_text.dart';
 import 'package:reis_imovel_app/dto/Scheduling.dart';
 import 'package:reis_imovel_app/models/SchedulingList.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
+import 'package:reis_imovel_app/utils/constants.dart';
 
 class ReservationScreen extends StatefulWidget {
   const ReservationScreen({super.key});
@@ -14,71 +16,70 @@ class ReservationScreen extends StatefulWidget {
 }
 
 class _ReservationScreenState extends State<ReservationScreen> {
+  Future? loadSchedulingsByUser;
+
   @override
   void initState() {
     super.initState();
-    Provider.of<SchedulingList>(
+    loadSchedulingsByUser = Provider.of<SchedulingList>(
       context,
       listen: false,
     ).loadSchedulingsByUser();
   }
 
-  Future<void> _refreshProperties(BuildContext context) {
-    return Provider.of<SchedulingList>(
+  Future<void> _refreshProperties(BuildContext context) async {
+    await Provider.of<SchedulingList>(
       context,
       listen: false,
     ).loadSchedulingsByUser();
-  }
-
-  Widget showEmptyMessage() {
-    double height = MediaQuery.of(context).size.height;
-
-    return SizedBox(
-      height: height,
-      child: Center(
-        child: AppText(
-          'Sem Reservas',
-          color: Colors.grey[400],
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    final SchedulingList scheduling = Provider.of(context);
-
-    List<Scheduling> schedulings = scheduling.schedulingsByUser;
-
-    double height = MediaQuery.of(context).size.height;
+    final schedulingList = Provider.of<SchedulingList>(context);
+    final schedulings = schedulingList.schedulingsByUser;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF9F9F9),
       body: RefreshIndicator(
         onRefresh: () => _refreshProperties(context),
+        backgroundColor: whiteColor,
+        color: primaryColor,
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(AppConstants.defaultPadding),
-              child: schedulings.isEmpty
-                  ? showEmptyMessage()
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: height,
-                          child: ListView.builder(
-                            itemCount: schedulings.length,
-                            itemBuilder: (ctx, index) => CardReservation(
-                              data: schedulings[index],
-                            ),
-                          ),
-                        ),
-                      ],
+          child: FutureBuilder(
+            future: loadSchedulingsByUser,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(child: Text('Ocorreu um erro!'));
+              } else {
+                if (schedulings.isEmpty) {
+                  // Mensagem de lista vazia
+                  return const Center(
+                    child: CustomText(
+                      'Sem Agendamentos',
+                      color: secondaryText,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
                     ),
-            ),
+                  );
+                } else {
+                  // Exibição da lista de reservas
+                  return Padding(
+                    padding: const EdgeInsets.all(AppConstants.defaultPadding),
+                    child: ListView.builder(
+                      itemCount: schedulings.length,
+                      itemBuilder: (ctx, index) => CardReservation(
+                        data: schedulings[index],
+                        onRefresh: _refreshProperties,
+                      ),
+                    ),
+                  );
+                }
+              }
+            },
           ),
         ),
       ),

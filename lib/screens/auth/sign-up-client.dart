@@ -117,24 +117,24 @@ class _SignUpClientScreenState extends State<SignUpClientScreen> {
     Auth auth = Provider.of(context, listen: false);
 
     final user = UserSignup(
-      username: _formData['username']!,
-      fullName: _formData['fullName']!,
-      email: _formData['email']!,
-      password: _formData['password']!,
-      phone: _formData['phone']!,
-      role: ["user"],
-      nif: _formData['nif']!,
-      address: _formData['address']!,
-      nationality: _formData['nationality']!,
-      maritalStatus: _formData['maritalStatus']!,
-    );
+        username: _formData['username']!,
+        fullName: _formData['fullName']!,
+        email: _formData['email']!,
+        password: _formData['password']!,
+        phone: _formData['phone']!,
+        role: ["user"],
+        nif: _formData['nif']!,
+        address: _formData['address']!,
+        nationality: _formData['nationality']!,
+        maritalStatus: _formData['maritalStatus']!,
+        urlDocument: '');
 
     final client = Client(nif: _formData["nif"]!);
 
     try {
       await auth.signupWithClient(user, client);
 
-      Navigator.of(context).restorablePopAndPushNamed(AppRoutes.SIGN_IN);
+      Navigator.of(context).pushReplacementNamed(AppRoutes.SIGN_IN);
 
       showCustomToast("Conta criada com sucesso.");
     } on Exception catch (error) {
