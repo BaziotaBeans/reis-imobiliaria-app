@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reis_imovel_app/components/new/custom_button.dart';
 import 'package:reis_imovel_app/components/new/custom_text.dart';
+import 'package:reis_imovel_app/models/property_screen_arguments.dart';
 import 'package:reis_imovel_app/screens/property/components/property_announcemnet_type_selector.dart';
 import 'package:reis_imovel_app/screens/property/components/property_type_selector.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
@@ -93,7 +94,11 @@ class _SelectPropertyTypeScreenState extends State<SelectPropertyTypeScreen> {
                     Navigator.pushNamed(
                       context,
                       AppRoutes.NEW_APARTMENT_SCREEN,
-                      arguments: AppConstants.propertyTypeRent,
+                      // arguments: AppConstants.propertyTypeRent,
+                      arguments: PropertyScreenArguments(
+                        announcementType: AppConstants.propertyTypeRent,
+                        propertyType: _selectedPropertyType,
+                      ),
                     );
                   }
                   if (_selectedAnnouncementType == 'SALE' &&
@@ -111,7 +116,11 @@ class _SelectPropertyTypeScreenState extends State<SelectPropertyTypeScreen> {
                     Navigator.pushNamed(
                       context,
                       AppRoutes.NEW_APARTMENT_SCREEN,
-                      arguments: AppConstants.propertyTypeSale,
+                      // arguments: AppConstants.propertyTypeSale,
+                      arguments: PropertyScreenArguments(
+                        announcementType: AppConstants.propertyTypeSale,
+                        propertyType: _selectedPropertyType,
+                      ),
                     );
                   }
                 },

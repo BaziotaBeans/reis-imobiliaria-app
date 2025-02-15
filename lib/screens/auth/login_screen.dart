@@ -174,6 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _authData['password'] = password ?? '',
                             validator: passwordValidator.call,
                             obscureText: isObscure,
+                            textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               hintText: "Digite a senha",
                               prefixIcon: Padding(

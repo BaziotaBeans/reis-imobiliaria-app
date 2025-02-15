@@ -59,6 +59,7 @@ class MyApp extends StatelessWidget {
             update: (ctx, auth, previous) {
               return PropertyScheduleList(
                 auth.token ?? '',
+                previous?.currentScheduling,
                 previous?.propertiesSchedule ?? [],
                 previous?.propertiesAvailableSchedules ?? [],
               );
@@ -99,6 +100,7 @@ class MyApp extends StatelessWidget {
           update: (ctx, auth, previous) {
             return PaymentList(
               auth.token ?? '',
+              auth.userId ?? '',
               previous?.currentPayment,
             );
           },

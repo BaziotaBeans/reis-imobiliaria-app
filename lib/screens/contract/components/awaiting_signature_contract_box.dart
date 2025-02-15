@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,7 @@ class AwaitingSignatureContractBox extends StatefulWidget {
 class _AwaitingSignatureContractBoxState
     extends State<AwaitingSignatureContractBox> {
   bool _isLoading = false;
+  bool _isSigned = false; // Controle da animação de sucesso
 
   void _signContract() async {
     setState(() => _isLoading = true);
@@ -36,12 +38,25 @@ class _AwaitingSignatureContractBoxState
       String nameToSign = AppUtils.getFirstAndLastName(
           widget.data.property.companyEntity.user.fullName);
 
+      // Pequeno atraso antes de chamar a assinatura para suavizar a experiência
+      await Future.delayed(const Duration(milliseconds: 500));
+
       await Provider.of<ContractList>(
         context,
         listen: false,
       ).updateOwnerSignature(nameToSign, widget.data.pkContract);
 
+      // Exibir animação de sucesso
+      setState(() {
+        _isSigned = true;
+        _isLoading = false;
+      });
+
+      // Exibir mensagem de sucesso
       ToastWidget.showSuccessToast("Assinado com sucesso");
+
+      // Aguardar um tempo antes de atualizar a interface
+      await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
         await widget.onRefresh(context);
@@ -53,11 +68,13 @@ class _AwaitingSignatureContractBoxState
         await DialogWidget.showErrorDialog(
           context: context,
           title: "Ocorreu um erro!",
-          message: "Ocorreu ao realizar a assinatura digital.",
+          message: "Ocorreu um erro ao realizar a assinatura digital.",
         );
       }
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -93,7 +110,7 @@ class _AwaitingSignatureContractBoxState
           const SizedBox(height: defaultPadding),
           const Expanded(
             child: CustomText(
-              'A assinatura do responsável do imóvel é obrigatório para a geração e confirmação do contracto. após a geração do mesmo o imóvel será liberado para o locatório e o valor será transferido para o responsável do imóvel.',
+              'A assinatura do responsável do imóvel é obrigatória para a geração e confirmação do contrato. Após a geração, o imóvel será liberado para o locatário e o valor será transferido para o responsável do imóvel.',
               color: whiteColor,
               fontSize: 14,
               softWrap: true,
@@ -101,6 +118,8 @@ class _AwaitingSignatureContractBoxState
             ),
           ),
           const SizedBox(height: defaultPadding),
+
+          // Se estiver carregando, exibe o loader
           if (_isLoading)
             const Center(
               child: Padding(
@@ -112,24 +131,38 @@ class _AwaitingSignatureContractBoxState
                 ),
               ),
             )
-          else
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomButton(
-                  text: 'Assinar Contracto',
-                  variant: ButtonVariant.tertiary,
-                  forcedTextColor: alertBoxColor,
-                  onPressed: _signContract,
+
+          // Se já assinou, exibe um check animado
+          else if (_isSigned)
+            Center(
+              child: AnimatedOpacity(
+                opacity: _isSigned ? 1.0 : 0.0,
+                duration: const Duration(seconds: 1),
+                child: Column(
+                  children: [
+                    const Icon(Icons.check_circle,
+                        size: 40, color: Colors.green),
+                    const SizedBox(height: 5),
+                    const CustomText(
+                      'Contrato assinado!',
+                      color: whiteColor,
+                      fontSize: 16,
+                      textAlign: TextAlign.center,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
                 ),
-                // const SizedBox(height: 10),
-                // CustomButton(
-                //   text: 'Cancelar Assinatura',
-                //   variant: ButtonVariant.danger,
-                //   onPressed: () {},
-                // )
-              ],
+              ),
             )
+
+          // Botão normal para assinar
+          else
+            CustomButton(
+              text: 'Assinar Contrato',
+              variant: ButtonVariant.tertiary,
+              forcedTextColor: alertBoxColor,
+              onPressed: _signContract,
+            ),
         ],
       ),
     );

@@ -27,7 +27,7 @@ class ScheduleStatus extends StatefulWidget {
 class _ScheduleStatusState extends State<ScheduleStatus> {
   // PropertyStatus? _selectedStatus = PropertyStatus.PUBLISHED;
 
-  List<Schedule> _schedules = [];
+  // List<Schedule> _schedules = [];
 
   final _dayOfWeekController = TextEditingController();
 
@@ -56,16 +56,16 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
 
   void _removeScheduleItem(int index) {
     setState(() {
-      _schedules = List.from(_schedules)..removeAt(index);
+      widget.selectedSchedules.removeAt(index);
     });
 
-    widget.addSchedule(_schedules);
+    widget.addSchedule(widget.selectedSchedules);
   }
 
   void _addSchedule() {
     if (_selectedStartTime != null && _selectedEndTime != null) {
       setState(() {
-        _schedules.add(Schedule(
+        widget.selectedSchedules.add(Schedule(
           dayOfWeek: AppUtils.getWeekDay(_dayOfWeekController.text),
           startTime: AppUtils.formatTimeInPickedTime(_selectedStartTime!),
           endTime: AppUtils.formatTimeInPickedTime(_selectedEndTime!),
@@ -76,11 +76,7 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
         _selectedEndTime = null;
       });
 
-      _schedules.forEach((element) {
-        print(element.dayOfWeek);
-      });
-
-      widget.addSchedule(_schedules);
+      widget.addSchedule(widget.selectedSchedules);
     }
   }
 
@@ -140,16 +136,12 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
   }
 
   Widget _listOfSelectedSchedules() {
-    double width = MediaQuery.of(context).size.width;
-
     return Container(
-      width: width,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
         ),
-        // color: Colors.green[400],
         border: Border.all(color: Colors.grey, width: 1),
       ),
       child: Column(
@@ -162,14 +154,14 @@ class _ScheduleStatusState extends State<ScheduleStatus> {
           ),
           const SizedBox(height: 10),
           SizedBox(
-            width: width,
             height: 35,
             child: ListView.separated(
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
-                return _tagWeekDaySchedule(_schedules[index].dayOfWeek, index);
+                return _tagWeekDaySchedule(
+                    widget.selectedSchedules[index].dayOfWeek, index);
               },
-              itemCount: _schedules.length,
+              itemCount: widget.selectedSchedules.length,
               scrollDirection: Axis.horizontal,
               separatorBuilder: (BuildContext context, int index) {
                 return const SizedBox(width: 5);

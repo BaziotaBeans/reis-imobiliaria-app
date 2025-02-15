@@ -34,3 +34,10 @@ double validateDoubleFormData(String value) {
   }
   return 0;
 }
+
+String? conservationValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return 'Por favor, selecione o estado de conservação.';
+  }
+  return null;
+}

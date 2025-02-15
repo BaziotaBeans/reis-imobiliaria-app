@@ -9,6 +9,7 @@ class Scheduling {
   final User user;
   final String? note;
   final String createdAt;
+  final String scheduledDate;
 
   Scheduling({
     required this.pkScheduling,
@@ -17,16 +18,18 @@ class Scheduling {
     required this.user,
     this.note,
     required this.createdAt,
+    required this.scheduledDate,
   });
 
   factory Scheduling.fromJSON(Map<String, dynamic> json) {
     return Scheduling(
-      pkScheduling: json['pkScheduling'],
-      propertySchedule: PropertyScheduleResult.fromJson(json['propertySchedule']),
-      property: Property.fromJson(json['property']),
-      user: User.fromJson(json['user']),
-      note: json['note'],
-      createdAt: json['createdAt'],
-    );
+        pkScheduling: json['pkScheduling'],
+        propertySchedule:
+            PropertyScheduleResult.fromJson(json['propertySchedule']),
+        property: Property.fromJson(json['property']),
+        user: User.fromJson(json['user']),
+        note: json['note'],
+        createdAt: json['createdAt'],
+        scheduledDate: json['scheduledDate']);
   }
 }

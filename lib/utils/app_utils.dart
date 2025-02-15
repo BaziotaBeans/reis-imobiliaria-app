@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -289,8 +290,10 @@ class AppUtils {
       return 'Público';
     } else if (propertyStatus == 'STANDBY') {
       return 'Pendente';
+    } else if (propertyStatus == 'DENIED') {
+      return 'Negado';
     }
-    return 'Arrendado';
+    return 'Ocupado';
   }
 
   static bool isEmptyIntValue(int value) {
@@ -384,5 +387,27 @@ class AppUtils {
     } else {
       return 'Referência';
     }
+  }
+
+  static String getPropertyTypeToSaveInDatabase(String value) {
+    if (value == 'APARTMENT') return 'Apartamento';
+    if (value == 'HOME') return 'Casa';
+    if (value == 'VILLA') return 'Vivenda';
+    return 'Terreno';
+  }
+
+  static String generateRandomReference() {
+    const int leftLimit = 48; // Código ASCII para '0'
+    const int rightLimit = 57; // Código ASCII para '9'
+    const int targetStringLength = 9;
+
+    final random = Random();
+
+    return String.fromCharCodes(
+      List.generate(
+        targetStringLength,
+        (_) => leftLimit + random.nextInt(rightLimit - leftLimit + 1),
+      ),
+    );
   }
 }

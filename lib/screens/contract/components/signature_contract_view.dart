@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/new/dialog_widget.dart';
@@ -25,6 +26,7 @@ class SignatureContractView extends StatefulWidget {
 
 class _SignatureContractViewState extends State<SignatureContractView> {
   bool _isLoading = false;
+  bool _isSigned = false; // Controle para a animação de sucesso
 
   void _signContract() async {
     setState(() => _isLoading = true);
@@ -33,12 +35,25 @@ class _SignatureContractViewState extends State<SignatureContractView> {
       String nameToSign =
           AppUtils.getFirstAndLastName(widget.data.user.fullName);
 
+      // Adicionando um pequeno delay antes da assinatura para melhorar UX
+      await Future.delayed(const Duration(milliseconds: 600));
+
       await Provider.of<ContractList>(
         context,
         listen: false,
       ).updateCustomerSignature(nameToSign, widget.data.pkContract);
 
+      // Exibir feedback visual com animação de sucesso
+      setState(() {
+        _isSigned = true;
+        _isLoading = false;
+      });
+
+      // Exibir toast de sucesso
       ToastWidget.showSuccessToast("Assinado com sucesso");
+
+      // Pequeno delay antes de atualizar a tela para que o usuário veja o efeito
+      await Future.delayed(const Duration(seconds: 2));
 
       if (mounted) {
         await widget.onRefresh(context);
@@ -50,11 +65,15 @@ class _SignatureContractViewState extends State<SignatureContractView> {
         await DialogWidget.showErrorDialog(
           context: context,
           title: "Ocorreu um erro!",
-          message: "Ocorreu ao realizar a assinatura digital.",
+          message: "Ocorreu um erro ao realizar a assinatura digital.",
         );
       }
     } finally {
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -78,7 +97,7 @@ class _SignatureContractViewState extends State<SignatureContractView> {
           const SizedBox(height: defaultPadding),
           const Center(
             child: CustomText(
-              'Para finalizar, basta assinar o contracto!',
+              'Para finalizar, basta assinar o contrato!',
               color: secondaryColor,
               fontSize: 24,
               softWrap: true,
@@ -90,7 +109,7 @@ class _SignatureContractViewState extends State<SignatureContractView> {
           const SizedBox(height: defaultPadding),
           const Center(
             child: CustomText(
-              'Agora você pode assinar seu documento referente ao contracto, do aluguel do imóvel.',
+              'Agora você pode assinar seu documento referente ao contrato de aluguel do imóvel.',
               softWrap: true,
               maxLines: 2,
               color: secondaryText,
@@ -124,7 +143,7 @@ class _SignatureContractViewState extends State<SignatureContractView> {
           ),
           const Center(
             child: CustomText(
-              'Ao clicar no botão abaixo, será emitido uma assinatura digital relativo ao contracto.',
+              'Ao clicar no botão abaixo, será emitida uma assinatura digital relativa ao contrato.',
               color: secondaryText,
               fontSize: 14,
               softWrap: true,
@@ -133,14 +152,40 @@ class _SignatureContractViewState extends State<SignatureContractView> {
             ),
           ),
           const SizedBox(height: 80),
+
+          // Se estiver carregando, exibe o loader
           if (_isLoading)
             const Center(child: CircularProgressIndicator(color: primaryColor))
+
+          // Se já assinou, exibe um check animado
+          else if (_isSigned)
+            Center(
+              child: AnimatedOpacity(
+                opacity: _isSigned ? 1.0 : 0.0,
+                duration: const Duration(seconds: 1),
+                child: const Column(
+                  children: [
+                    Icon(Icons.check_circle, size: 80, color: Colors.green),
+                    SizedBox(height: 10),
+                    CustomText(
+                      'Contrato assinado com sucesso!',
+                      color: secondaryColor,
+                      fontSize: 18,
+                      textAlign: TextAlign.center,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+              ),
+            )
+
+          // Botão normal para assinar
           else
             CustomButton(
               text: 'Confirmar e finalizar a assinatura',
               suffixIcon: Icons.check_rounded,
               onPressed: _signContract,
-            )
+            ),
         ],
       ),
     );

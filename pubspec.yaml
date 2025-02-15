@@ -66,6 +66,7 @@ dependencies:
   flutter_svg: ^2.0.5
   confetti: ^0.8.0
   accessibility_tools: ^2.2.3
+  keyboard_avoider: ^0.2.0
   
 
 dependency_overrides:

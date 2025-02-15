@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/button.dart';
 import 'package:reis_imovel_app/components/card_detail_image_slider.dart';
 import 'package:reis_imovel_app/components/go-back-button.dart';
@@ -11,7 +9,6 @@ import 'package:reis_imovel_app/components/new/expandable_text.dart';
 import 'package:reis_imovel_app/dto/PropertyResult.dart';
 import 'package:reis_imovel_app/enums.dart';
 import 'package:reis_imovel_app/models/PropertyList.dart';
-import 'package:reis_imovel_app/utils/app_colors.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 import 'package:reis_imovel_app/utils/app_routes.dart';
 import 'package:reis_imovel_app/utils/app_utils.dart';
@@ -531,19 +528,6 @@ class _AnnouncementPreviewDetailScreenState
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // Editar Imovel
-                      // Expanded(
-                      //   child: Button(
-                      //     title: 'Editar Imóvel',
-                      //     fontSize: 14,
-                      //     onPressed: () {
-                      //       Navigator.of(context)
-                      //           .pushNamed(AppRoutes.ANNOUNCEMENT_SCREEN);
-                      //     },
-                      //     variant: ButtonVariant.outlineAlert,
-                      //   ),
-                      // ),
-                      // SizedBox(width: 16),
                       Expanded(
                         child: Button(
                           title: 'Exluir Imóvel',

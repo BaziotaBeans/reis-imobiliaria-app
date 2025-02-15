@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:keyboard_avoider/keyboard_avoider.dart';
 import 'package:provider/provider.dart';
 import 'package:reis_imovel_app/components/app_text.dart';
 import 'package:reis_imovel_app/components/button.dart';
@@ -194,7 +195,9 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
   Widget _boxDetail(BuildContext context, PropertyResult data) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(
+        vertical: defaultPadding,
+      ),
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -209,11 +212,19 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
             spacing: 20,
             runSpacing: 20,
             children: [
-              _boxDetailItem('Finalidade',
-                  AppUtils.getPropertyTypeLabel(data.property.fkPropertyType)),
               _boxDetailItem(
-                  'Valor', AppUtils.formatPrice(data.property.price)),
-              // _boxDetailItem('Taxa do condominio', 'N/I'),
+                'Finalidade',
+                AppUtils.getPropertyTypeLabel(data.property.fkPropertyType),
+              ),
+              _boxDetailItem(
+                'Valor',
+                AppUtils.formatPrice(data.property.price),
+              ),
+              if (data.property.conservation != null)
+                _boxDetailItem('Conservação', data.property.conservation ?? ''),
+              _boxDetailItem('Tipo', data.property.propertyType),
+              _boxDetailItem('Taxa do condominio',
+                  formatPrice(data.property.condominiumFee)),
             ],
           ),
           if (!(data.property.fkPropertyType ==
@@ -426,20 +437,17 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
 
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return Wrap(
-          children: [
-            Material(
-              color: Colors.white,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0),
-              ),
-              child: SchedulePicker(
-                pkProperty: pkProperty,
-              ),
-            )
-          ],
+        return Material(
+          color: Colors.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20.0),
+            topRight: Radius.circular(20.0),
+          ),
+          child: SchedulePicker(
+            pkProperty: pkProperty,
+          ),
         );
       },
     );
@@ -531,22 +539,26 @@ class _ImmobileDetailScreenState extends State<ImmobileDetailScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _cardPrimary(context, data),
-              const SizedBox(height: defaultPadding),
-              _displayDetail(context, data),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: _contactBox(context, data),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              _footer(context, data)
-            ],
+      resizeToAvoidBottomInset: true,
+      body: KeyboardAvoider(
+        autoScroll: true,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _cardPrimary(context, data),
+                const SizedBox(height: defaultPadding),
+                _displayDetail(context, data),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: _contactBox(context, data),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                _footer(context, data)
+              ],
+            ),
           ),
         ),
       ),

@@ -53,6 +53,9 @@ class PropertyList with ChangeNotifier {
       'schedules': data['schedules'],
       'latitude': data['latitude'] as double,
       'longitude': data['longitude'] as double,
+      'conservation': data['conservation'],
+      'propertyType': data['propertyType'],
+      'condominiumFee': data['condominiumFee'] as double,
     });
 
     final property = Property(

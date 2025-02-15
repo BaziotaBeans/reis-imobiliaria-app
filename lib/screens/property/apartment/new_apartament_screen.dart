@@ -7,6 +7,7 @@ import 'package:reis_imovel_app/components/new/dialog_widget.dart';
 import 'package:reis_imovel_app/components/new/snackbar_bar_widget.dart';
 import 'package:reis_imovel_app/components/new/toast_widget.dart';
 import 'package:reis_imovel_app/models/PropertyList.dart';
+import 'package:reis_imovel_app/models/property_screen_arguments.dart';
 import 'package:reis_imovel_app/screens/property/apartment/pages/fifth_page.dart';
 import 'package:reis_imovel_app/screens/property/apartment/pages/first_page.dart';
 import 'package:reis_imovel_app/screens/property/apartment/pages/fourth_page.dart';
@@ -69,6 +70,11 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
 
   final TextEditingController longitudeController = TextEditingController();
 
+  final TextEditingController conservationController = TextEditingController();
+
+  final TextEditingController condominiumFeeController =
+      TextEditingController();
+
   List<MediaFile> selectedFiles = [];
 
   List<String> images = [];
@@ -99,6 +105,7 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
     priceController.dispose();
     latitudeController.dispose();
     longitudeController.dispose();
+    conservationController.dispose();
     super.dispose();
   }
 
@@ -121,9 +128,10 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
       return;
     }
 
-    String propertyType = ModalRoute.of(context)?.settings.arguments as String;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as PropertyScreenArguments;
 
-    if (propertyType.isEmpty) {
+    if (args.announcementType.isEmpty) {
       SnackBarWidget.showError(
         context: context,
         message: 'Ocorreu um erro!',
@@ -133,6 +141,15 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
     }
 
     setState(() => _isLoading = true);
+
+    if (selectedSchedules.isEmpty) {
+      SnackBarWidget.showError(
+        context: context,
+        message: 'PERDEU CONTEXTO DO AGENDAMENTO',
+      );
+
+      return;
+    }
 
     try {
       bool success = await AppUtils.uploadMultipleFilesForUser(
@@ -161,12 +178,17 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
         'paymentModality':
             validateStringFormData(paymentMethodController.text.trim()),
         'status': true,
-        'fkPropertyType': propertyType,
+        'fkPropertyType': args.announcementType,
         'images': images,
-        'propertyStatus': 'PUBLISHED',
+        'propertyStatus': 'STANDBY',
         'schedules': selectedSchedules,
         'latitude': validateDoubleFormData(latitudeController.text.trim()),
         'longitude': validateDoubleFormData(longitudeController.text.trim()),
+        'conservation': conservationController.text,
+        'propertyType':
+            AppUtils.getPropertyTypeToSaveInDatabase(args.propertyType),
+        'condominiumFee':
+            validateDoubleFormData(condominiumFeeController.text.trim())
       };
 
       if (mounted) {
@@ -200,7 +222,22 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
     }
   }
 
+  bool _isPageValid() {
+    if (_pageIndex == 3 && selectedSchedules.isEmpty) {
+      SnackBarWidget.showWarning(
+        context: context,
+        message:
+            'Por favor, adicione pelo menos um agendamento antes de continuar.',
+      );
+      return false;
+    }
+    // Adicione validações específicas de outras páginas aqui, se necessário
+    return true;
+  }
+
   void _validateAndAdvance() {
+    if (!_isPageValid()) return;
+
     final isValid = _formKeys[_pageIndex].currentState?.validate() ?? false;
 
     if (isValid) {
@@ -286,7 +323,8 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String propertyType = ModalRoute.of(context)?.settings.arguments as String;
+    final args =
+        ModalRoute.of(context)?.settings.arguments as PropertyScreenArguments;
 
     return Scaffold(
       backgroundColor: whiteColor,
@@ -322,6 +360,7 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
                 formKey: _formKeys[0],
                 titleController: titleController,
                 descriptionController: descriptionController,
+                conservationController: conservationController,
               ),
               SecondPage(
                 formKey: _formKeys[1],
@@ -349,7 +388,8 @@ class _NewApartmentScreenState extends State<NewApartmentScreen> {
                 formKey: _formKeys[4],
                 paymentMethodController: paymentMethodController,
                 priceController: priceController,
-                propertyType: propertyType,
+                propertyType: args.announcementType,
+                condominiumFeeController: condominiumFeeController,
               ),
               SixthPage(
                 formKey: _formKeys[5],

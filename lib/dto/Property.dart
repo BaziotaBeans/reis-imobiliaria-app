@@ -29,6 +29,9 @@ class Property {
   final String createdAt;
   final double? latitude;
   final double? longitude;
+  final String propertyType;
+  final double condominiumFee;
+  final String? conservation;
 
   Property({
     required this.pkProperty,
@@ -56,6 +59,9 @@ class Property {
     required this.createdAt,
     required this.latitude,
     required this.longitude,
+    required this.propertyType,
+    required this.condominiumFee,
+    required this.conservation,
   });
 
   factory Property.fromJson(Map<String, dynamic> json) {
@@ -86,6 +92,9 @@ class Property {
       createdAt: json['createdAt'],
       latitude: json['latitude'].toDouble() ?? 0.0,
       longitude: json['longitude'].toDouble() ?? 0.0,
+      propertyType: json['propertyType'],
+      condominiumFee: json['condominiumFee'].toDouble() ?? 0.0,
+      conservation: json['conservation'],
     );
   }
 }

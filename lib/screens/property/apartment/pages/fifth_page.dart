@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reis_imovel_app/components/new/custom_dropdown_form_field.dart';
 import 'package:reis_imovel_app/components/new/custom_form_field.dart';
+import 'package:reis_imovel_app/components/new/new_custom_dropdown_form_field.dart';
 import 'package:reis_imovel_app/data/payment_modality_data.dart';
 import 'package:reis_imovel_app/screens/property/components/subtitle_page.dart';
 import 'package:reis_imovel_app/screens/property/components/title_page.dart';
@@ -15,6 +16,8 @@ class FifthPage extends StatefulWidget {
 
   final TextEditingController priceController;
 
+  final TextEditingController condominiumFeeController;
+
   final String propertyType;
 
   const FifthPage({
@@ -23,6 +26,7 @@ class FifthPage extends StatefulWidget {
     required this.paymentMethodController,
     required this.priceController,
     required this.propertyType,
+    required this.condominiumFeeController,
   });
 
   @override
@@ -61,12 +65,35 @@ class _FifthPageState extends State<FifthPage> {
             if (AppConstants.propertyTypeRent == widget.propertyType)
               const SizedBox(height: defaultPadding),
             if (AppConstants.propertyTypeRent == widget.propertyType)
-              CustomDropdownFormField(
-                list: payment_modality_data,
-                hintText: 'Selecionar a modalidade pagamento',
+              NewCustomDropdownFormField(
                 labelText: 'Modalidade de pagamento',
+                hintText: 'Selecionar a modalidade pagamento',
                 controller: widget.paymentMethodController,
-              )
+                list: payment_modality_data,
+                // validator: genericValidator.call,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Campo é obrigatório.';
+                  }
+                  return null;
+                },
+                onChanged: (value) {
+                  debugPrint('Selected value: $value');
+                },
+              ),
+            // CustomDropdownFormField(
+            //   list: payment_modality_data,
+            //   hintText: 'Selecionar a modalidade pagamento',
+            //   labelText: 'Modalidade de pagamento',
+            //   controller: widget.paymentMethodController,
+            // ),
+            const SizedBox(height: defaultPadding),
+            CustomFormField(
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              labelText: 'Taxa de condomínio',
+              controller: widget.condominiumFeeController,
+            )
           ],
         ),
       ),

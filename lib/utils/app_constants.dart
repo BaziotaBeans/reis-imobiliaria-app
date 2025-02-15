@@ -13,6 +13,8 @@ class AppConstants {
     r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$#!%*?&_])[A-Za-z\d@#$!%*?&_].{7,}$',
   );
 
+  static const double visitFee = 3000;
+
   static const double selectUserTypeGapBetweenBox = 24;
 
   static const double screenHorizontalPadding = 30;

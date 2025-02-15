@@ -67,6 +67,7 @@ class _FirstPageState extends State<FirstPage> {
               labelText: 'Área total (m²)',
               hintText: 'Digite a área total',
               helperText: 'Área de construção do imóvel, medido em m².',
+              validator: genericValidator,
               // validator: userNameValidator.call,
             ),
           ],

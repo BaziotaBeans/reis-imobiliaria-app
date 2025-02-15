@@ -146,10 +146,13 @@ class _NewTerrainScreenState extends State<NewTerrainScreen> {
         'status': true,
         'fkPropertyType': propertyType,
         'images': images,
-        'propertyStatus': 'PUBLISHED',
+        'propertyStatus': 'STANDBY',
         'schedules': selectedSchedules,
         'latitude': validateDoubleFormData(latitudeController.text.trim()),
         'longitude': validateDoubleFormData(longitudeController.text.trim()),
+        'propertyType': 'Terreno',
+        'condominiumFee': 0.0,
+        'conservation': 'Novo',
       };
 
       if (mounted) {
@@ -179,7 +182,22 @@ class _NewTerrainScreenState extends State<NewTerrainScreen> {
     }
   }
 
+  bool _isPageValid() {
+    if (_pageIndex == 2 && selectedSchedules.isEmpty) {
+      SnackBarWidget.showWarning(
+        context: context,
+        message:
+            'Por favor, adicione pelo menos um agendamento antes de continuar.',
+      );
+      return false;
+    }
+    // Adicione validações específicas de outras páginas aqui, se necessário
+    return true;
+  }
+
   void _validateAndAdvance() {
+    if (!_isPageValid()) return;
+
     final isValid = _formKeys[_pageIndex].currentState?.validate() ?? false;
 
     if (isValid) {

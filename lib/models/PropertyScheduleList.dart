@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:reis_imovel_app/dto/PropertyScheduleResult.dart';
+import 'package:reis_imovel_app/dto/Scheduling.dart';
 import 'package:reis_imovel_app/utils/app_constants.dart';
 
 class PropertyScheduleList with ChangeNotifier {
@@ -10,6 +11,10 @@ class PropertyScheduleList with ChangeNotifier {
   List<PropertyScheduleResult> _propertiesSchedules = [];
 
   List<PropertyScheduleResult> _propertiesAvailableSchedules = [];
+
+  Scheduling? _currentScheduling;
+
+  Scheduling? get currentScheduling => _currentScheduling;
 
   List<PropertyScheduleResult> get propertiesSchedule =>
       [..._propertiesSchedules];
@@ -22,6 +27,7 @@ class PropertyScheduleList with ChangeNotifier {
   PropertyScheduleList([
     this._token = '',
     // this._userId = '',
+    this._currentScheduling,
     this._propertiesSchedules = const <PropertyScheduleResult>[],
     this._propertiesAvailableSchedules = const <PropertyScheduleResult>[],
   ]);
@@ -44,6 +50,29 @@ class PropertyScheduleList with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       throw Exception('Ocorreu um erro ao criar o agendamento: ' + e.toString())
+          .toString();
+    }
+  }
+
+  Future<void> loadLastScheduling() async {
+    const url = "${AppConstants.baseUrl}scheduling/last";
+
+    try {
+      final response = await dio.get(url,
+          options: Options(
+            headers: {"Authorization": "Bearer $_token"},
+            contentType: Headers.jsonContentType,
+            responseType: ResponseType.json,
+          ));
+
+      if (response.data.toString().isNotEmpty) {
+        _currentScheduling = Scheduling.fromJSON(response.data);
+      }
+
+      notifyListeners();
+    } catch (e) {
+      throw Exception(
+              'Ocorreu um erro ao carregar o agendamento: ' + e.toString())
           .toString();
     }
   }
